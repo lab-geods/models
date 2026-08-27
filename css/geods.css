@@ -137,15 +137,17 @@ a{
 }
 
 
-.geods-brand .mark{
+/* LOGO GEO-DS */
 
-    font-family:var(--font-mono);
+.geods-brand .logo{
 
-    font-size:15px;
+    display:block;
 
-    letter-spacing:.14em;
+    width:150px;
 
-    font-weight:600;
+    height:auto;
+
+    margin-bottom:6px;
 }
 
 
