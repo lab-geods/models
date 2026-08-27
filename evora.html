@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modelos 3D – Évora</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at top left,#1d3557 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#457b9d 0%,transparent 30%),
+        #0b0f14;
+
+    color:white;
+    min-height:100vh;
+}
+
+/* BOTÃO */
+
+.top-bar{
+    width:90%;
+    max-width:1000px;
+    margin:30px auto 0;
+}
+
+.back-button{
+    display:inline-block;
+
+    padding:12px 24px;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-weight:600;
+
+    background:linear-gradient(135deg,#2196f3,#21cbf3);
+
+    box-shadow:0 0 15px rgba(33,203,243,.4);
+
+    transition:.3s ease;
+}
+
+.back-button:hover{
+    transform:scale(1.05);
+
+    box-shadow:
+        0 0 25px rgba(33,203,243,.8);
+}
+
+/* TÍTULOS */
+
+h1{
+    text-align:center;
+    font-size:52px;
+    font-weight:700;
+    margin:30px 0 50px;
+}
+
+h2{
+    text-align:center;
+    font-size:28px;
+    font-weight:600;
+    margin:45px 0 20px;
+}
+
+/* VIEWERS */
+
+.viewer-container{
+
+    width:90%;
+    max-width:1000px;
+
+    margin:0 auto 50px;
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    transition:.35s ease;
+
+    box-shadow:
+        0 0 20px rgba(0,0,0,0.35);
+
+    padding:20px;
+}
+
+.viewer-container::before{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.08),
+            transparent
+        );
+
+    pointer-events:none;
+}
+
+.viewer-container:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#64b5f6;
+
+    box-shadow:
+        0 0 25px rgba(100,181,246,0.35),
+        0 0 60px rgba(100,181,246,0.15);
+}
+
+iframe{
+    width:100%;
+    height:600px;
+    border:none;
+    border-radius:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <a href="index.html" class="back-button">
+        ← Voltar ao Início
+    </a>
+</div>
+
+<h1>Modelos 3D – Évora</h1>
+
+<h2>Modelo 3D + Vegetação com o Modelo Digital de Elevação</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/rs8NJd" allowfullscreen></iframe>
+</div>
+
+<h2>Modelo 3D + Vegetação com o Modelo Digital de Terreno</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/IrYTBe" allowfullscreen></iframe>
+</div>
+
+<h2>Vegetação com o Modelo Digital de Terreno</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/_Siw8t" allowfullscreen></iframe>
+</div>
+
+<h2>Edifícios com Modelo Digital de Terreno</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/H81lCA" allowfullscreen></iframe>
+</div>
+
+<h2>Ruas e Chão com Modelo Digital de Terreno</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/Bv3H1v" allowfullscreen></iframe>
+</div>
+
+<h2>Carros com Modelo Digital de Terreno</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/SuBdRO" allowfullscreen></iframe>
+</div>
+
+<h2>Colégio do Espírito Santo</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/fPPJ3_" allowfullscreen></iframe>
+</div>
+
+<h2>Escola de Ciências e Tecnologia (ECT)</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/34U2Ot" allowfullscreen></iframe>
+</div>
+
+<h2>Sé de Évora</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/uGUIqd" allowfullscreen></iframe>
+</div>
+
+<h2>Templo de Diana</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/2Trmyl" allowfullscreen></iframe>
+</div>
+
+<h2>Palácio D. Manuel</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/fxdIzp" allowfullscreen></iframe>
+</div>
+
+<h2>Igreja de São Francisco</h2>
+<div class="viewer-container">
+    <iframe src="https://realitymax.co/embed/c3YK0Z" allowfullscreen></iframe>
+</div>
+
+</body>
+</html>
