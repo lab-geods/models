@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GEO-DS — Atlas Digital do Território</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400&family=Inter:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/geods.css">
+
+    <style>
+
+        /* ============================================================
+           INDEX 2 — ELEMENTOS EXTRA
+           ============================================================ */
+
+        .atlas-intro{
+            max-width:1100px;
+            margin:20px auto 0;
+            padding:0 24px;
+        }
+
+
+        .atlas-statement{
+            border-top:1px solid rgba(255,255,255,.1);
+            border-bottom:1px solid rgba(255,255,255,.1);
+
+            padding:48px 0;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+
+            gap:40px;
+        }
+
+
+        .atlas-statement h2{
+            font-family:var(--font-display);
+            font-size:clamp(30px,4vw,48px);
+            line-height:1.1;
+            font-weight:500;
+            max-width:650px;
+        }
+
+
+        .atlas-statement h2 em{
+            font-style:italic;
+            font-weight:400;
+        }
+
+
+        .atlas-statement p{
+            max-width:330px;
+            color:var(--text-dim);
+            font-size:14px;
+            line-height:1.6;
+        }
+
+
+        /* ============================================================
+           MÉTRICAS
+           ============================================================ */
+
+        .atlas-metrics{
+
+            max-width:1100px;
+
+            margin:0 auto;
+
+            padding:0 24px;
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            border-bottom:
+                1px solid rgba(255,255,255,.1);
+        }
+
+
+        .metric{
+
+            padding:28px 20px;
+
+            border-right:
+                1px solid rgba(255,255,255,.08);
+        }
+
+
+        .metric:first-child{
+            padding-left:0;
+        }
+
+
+        .metric:last-child{
+            border-right:none;
+        }
+
+
+        .metric-number{
+
+            font-family:var(--font-mono);
+
+            font-size:25px;
+
+            font-weight:600;
+
+            margin-bottom:7px;
+        }
+
+
+        .metric-label{
+
+            color:var(--text-faint);
+
+            font-family:var(--font-mono);
+
+            font-size:10px;
+
+            letter-spacing:.1em;
+
+            text-transform:uppercase;
+        }
+
+
+        /* ============================================================
+           CAMADAS
+           ============================================================ */
+
+        .layer-map{
+
+            max-width:1100px;
+
+            margin:80px auto 30px;
+
+            padding:0 24px;
+        }
+
+
+        .section-label{
+
+            font-family:var(--font-mono);
+
+            color:var(--text-faint);
+
+            font-size:11px;
+
+            letter-spacing:.15em;
+
+            text-transform:uppercase;
+
+            margin-bottom:22px;
+        }
+
+
+        .layers{
+
+            border:
+                1px solid rgba(255,255,255,.1);
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            background:
+                rgba(255,255,255,.025);
+        }
+
+
+        .layer{
+
+            display:grid;
+
+            grid-template-columns:
+                90px 1fr 240px;
+
+            align-items:center;
+
+            min-height:105px;
+
+            padding:20px 30px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.08);
+
+            text-decoration:none;
+
+            transition:.35s ease;
+        }
+
+
+        .layer:last-child{
+            border-bottom:none;
+        }
+
+
+        .layer:hover{
+            background:
+                rgba(255,255,255,.055);
+
+            padding-left:40px;
+        }
+
+
+        .layer-number{
+
+            font-family:var(--font-mono);
+
+            font-size:11px;
+
+            color:var(--text-faint);
+
+            letter-spacing:.1em;
+        }
+
+
+        .layer-name{
+
+            font-family:var(--font-display);
+
+            font-size:27px;
+
+            font-weight:500;
+        }
+
+
+        .layer-description{
+
+            color:var(--text-dim);
+
+            font-size:13px;
+
+            line-height:1.45;
+        }
+
+
+        .layer-minas .layer-name{
+            color:var(--minas-glow);
+        }
+
+
+        .layer-patrimonio .layer-name{
+            color:var(--patrimonio-glow);
+        }
+
+
+        .layer-pradarias .layer-name{
+            color:var(--pradarias-glow);
+        }
+
+
+        .layer-cidades .layer-name{
+            color:var(--cidades-glow);
+        }
+
+
+        /* ============================================================
+           COMO VEMOS O TERRITÓRIO
+           ============================================================ */
+
+        .methods{
+
+            max-width:1100px;
+
+            margin:100px auto;
+
+            padding:0 24px;
+        }
+
+
+        .methods-header{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:flex-end;
+
+            gap:30px;
+
+            margin-bottom:35px;
+        }
+
+
+        .methods-header h2{
+
+            font-family:var(--font-display);
+
+            font-size:clamp(30px,4vw,44px);
+
+            font-weight:500;
+        }
+
+
+        .methods-header p{
+
+            max-width:350px;
+
+            color:var(--text-dim);
+
+            font-size:14px;
+
+            line-height:1.6;
+        }
+
+
+        .method-grid{
+
+            display:grid;
+
+            grid-template-columns:
+                repeat(4,1fr);
+
+            gap:1px;
+
+            background:
+                rgba(255,255,255,.1);
+
+            border:
+                1px solid rgba(255,255,255,.1);
+
+            border-radius:20px;
+
+            overflow:hidden;
+        }
+
+
+        .method{
+
+            background:
+                #0e1319;
+
+            padding:32px 26px;
+
+            min-height:210px;
+
+            transition:.3s ease;
+        }
+
+
+        .method:hover{
+
+            background:
+                #151c24;
+        }
+
+
+        .method-number{
+
+            font-family:var(--font-mono);
+
+            color:var(--text-faint);
+
+            font-size:10px;
+
+            letter-spacing:.1em;
+
+            margin-bottom:40px;
+        }
+
+
+        .method h3{
+
+            font-family:var(--font-display);
+
+            font-size:24px;
+
+            margin-bottom:10px;
+
+            font-weight:500;
+        }
+
+
+        .method p{
+
+            color:var(--text-dim);
+
+            font-size:13px;
+
+            line-height:1.55;
+        }
+
+
+        /* ============================================================
+           FRASE FINAL
+           ============================================================ */
+
+        .atlas-final{
+
+            max-width:1100px;
+
+            margin:120px auto 100px;
+
+            padding:0 24px;
+
+            text-align:center;
+        }
+
+
+        .atlas-final .line{
+
+            width:50px;
+
+            height:1px;
+
+            background:
+                rgba(255,255,255,.3);
+
+            margin:0 auto 35px;
+        }
+
+
+        .atlas-final h2{
+
+            font-family:var(--font-display);
+
+            font-size:clamp(35px,6vw,65px);
+
+            font-weight:500;
+
+            line-height:1.05;
+        }
+
+
+        .atlas-final h2 em{
+
+            font-style:italic;
+
+            font-weight:400;
+        }
+
+
+        .atlas-final p{
+
+            max-width:600px;
+
+            margin:25px auto 0;
+
+            color:var(--text-dim);
+
+            font-size:14px;
+
+            line-height:1.65;
+        }
+
+
+        /* ============================================================
+           MOBILE
+           ============================================================ */
+
+        @media(max-width:700px){
+
+            .atlas-statement{
+
+                flex-direction:column;
+
+                align-items:flex-start;
+            }
+
+
+            .atlas-metrics{
+
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .metric:nth-child(2){
+
+                border-right:none;
+            }
+
+
+            .layer{
+
+                grid-template-columns:
+                    55px 1fr;
+
+                gap:8px;
+
+                padding:24px;
+            }
+
+
+            .layer-description{
+
+                grid-column:2;
+
+                margin-top:-5px;
+            }
+
+
+            .method-grid{
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+
+            .methods-header{
+
+                flex-direction:column;
+
+                align-items:flex-start;
+            }
+
+        }
+
+
+        @media(max-width:500px){
+
+            .atlas-metrics{
+
+                grid-template-columns:1fr;
+            }
+
+
+            .metric{
+
+                border-right:none;
+
+                border-bottom:
+                    1px solid rgba(255,255,255,.08);
+
+                padding-left:0;
+            }
+
+
+            .metric:last-child{
+
+                border-bottom:none;
+            }
+
+
+            .method-grid{
+
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ============================================================
+     NAVEGAÇÃO
+     ============================================================ -->
+
+<nav class="geods-nav">
+
+    <a href="index.html" class="geods-brand">
+
+        <img
+            src="images/GEODS.png"
+            alt="GEO-DS LAB"
+            class="logo"
+        >
+
+        <span class="sub">
+            UNIVERSIDADE DE ÉVORA
+        </span>
+
+    </a>
+
+
+    <div class="geods-links">
+
+        <a href="minas.html" class="nav-minas">
+
+            <span class="dot"></span>
+
+            <span class="txt">
+                Minas e Pedreiras
+            </span>
+
+        </a>
+
+
+        <a href="patrimonio.html" class="nav-patrimonio">
+
+            <span class="dot"></span>
+
+            <span class="txt">
+                Património
+            </span>
+
+        </a>
+
+
+        <a href="pradarias.html" class="nav-pradarias">
+
+            <span class="dot"></span>
+
+            <span class="txt">
+                Pradarias e Zonas Costeiras
+            </span>
+
+        </a>
+
+
+        <a href="cidades.html" class="nav-cidades">
+
+            <span class="dot"></span>
+
+            <span class="txt">
+                Cidades e Território
+            </span>
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+
+<header class="hero">
+
+    <div class="eyebrow">
+
+        Documentação digital · LiDAR &amp; fotogrametria · modelação 3D
+
+    </div>
+
+
+    <h1>
+
+        Uma <em>perspetiva</em> digital sobre o território
+
+    </h1>
+
+
+    <p>
+
+        O laboratório GEO-DS documenta o território português em quatro
+        camadas: da rocha que se extrai, ao património que se ergueu
+        sobre ela, às cidades que o organizam, até às pradarias e à costa
+        que o envolvem.
+
+    </p>
+
+</header>
+
+
+
+<!-- ============================================================
+     FRASE CONCEPTUAL
+     ============================================================ -->
+
+<section class="atlas-intro">
+
+    <div class="atlas-statement">
+
+        <h2>
+
+            O território não é uma superfície.
+            É um sistema de <em>camadas.</em>
+
+        </h2>
+
+
+        <p>
+
+            Cada paisagem resulta da interação entre processos
+            geológicos, atividade humana, património, vegetação e
+            ocupação do território.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     MÉTRICAS
+     ============================================================ -->
+
+<section class="atlas-metrics">
+
+    <div class="metric">
+
+        <div class="metric-number">
+            04
+        </div>
+
+        <div class="metric-label">
+            Camadas do território
+        </div>
+
+    </div>
+
+
+    <div class="metric">
+
+        <div class="metric-number">
+            3D
+        </div>
+
+        <div class="metric-label">
+            Documentação espacial
+        </div>
+
+    </div>
+
+
+    <div class="metric">
+
+        <div class="metric-number">
+            LiDAR
+        </div>
+
+        <div class="metric-label">
+            Levantamento de precisão
+        </div>
+
+    </div>
+
+
+    <div class="metric">
+
+        <div class="metric-number">
+            SIG
+        </div>
+
+        <div class="metric-label">
+            Análise espacial
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     AS QUATRO CAMADAS
+     ============================================================ -->
+
+<section class="layer-map">
+
+    <div class="section-label">
+        Atlas · estrutura territorial
+    </div>
+
+
+    <div class="layers">
+
+
+        <a href="minas.html" class="layer layer-minas">
+
+            <div class="layer-number">
+                01
+            </div>
+
+            <div class="layer-name">
+                A rocha
+            </div>
+
+            <div class="layer-description">
+                Minas e pedreiras
+            </div>
+
+        </a>
+
+
+        <a href="patrimonio.html" class="layer layer-patrimonio">
+
+            <div class="layer-number">
+                02
+            </div>
+
+            <div class="layer-name">
+                O construído
+            </div>
+
+            <div class="layer-description">
+                Património e memória
+            </div>
+
+        </a>
+
+
+        <a href="pradarias.html" class="layer layer-pradarias">
+
+            <div class="layer-number">
+                03
+            </div>
+
+            <div class="layer-name">
+                A vegetação
+            </div>
+
+            <div class="layer-description">
+                Pradarias e zonas costeiras
+            </div>
+
+        </a>
+
+
+        <a href="cidades.html" class="layer layer-cidades">
+
+            <div class="layer-number">
+                04
+            </div>
+
+            <div class="layer-name">
+                À superfície
+            </div>
+
+            <div class="layer-description">
+                Cidades e território
+            </div>
+
+        </a>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     PROJETOS
+     ============================================================ -->
+
+<div class="strata">
+
+
+    <a class="stratum minas" href="minas.html">
+
+        <div class="label">
+
+            <span class="index">
+                Camada 01 — a rocha
+            </span>
+
+            <h2>
+                Minas e Pedreiras
+            </h2>
+
+            <p>
+                Geologia e paisagem industrial em 3D.
+            </p>
+
+        </div>
+
+
+        <span class="go">
+
+            Explorar
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+
+            </svg>
+
+        </span>
+
+    </a>
+
+
+
+    <a class="stratum patrimonio" href="patrimonio.html">
+
+        <div class="label">
+
+            <span class="index">
+                Camada 02 — o construído
+            </span>
+
+            <h2>
+                Património
+            </h2>
+
+            <p>
+                Mosteiros, castelos, sítios arqueológicos e centros
+                históricos documentados em modelos 3D.
+            </p>
+
+        </div>
+
+
+        <span class="go">
+
+            Explorar
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+
+            </svg>
+
+        </span>
+
+    </a>
+
+
+
+    <a class="stratum pradarias" href="pradarias.html">
+
+        <div class="label">
+
+            <span class="index">
+                Camada 03 — a vegetação
+            </span>
+
+            <h2>
+                Pradarias e Zonas Costeiras
+            </h2>
+
+            <p>
+                Pradarias, dunas, sapais e litoral: coberto vegetal
+                e dinâmica costeira documentados em modelos 3D.
+            </p>
+
+        </div>
+
+
+        <span class="go">
+
+            Explorar
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+
+            </svg>
+
+        </span>
+
+    </a>
+
+
+
+    <a class="stratum cidades" href="cidades.html">
+
+        <div class="label">
+
+            <span class="index">
+                Camada 04 — à superfície
+            </span>
+
+            <h2>
+                Cidades e Território
+            </h2>
+
+            <p>
+                Levantamentos urbanos e territoriais: tecido edificado,
+                paisagem e ocupação do solo em modelos 3D.
+            </p>
+
+        </div>
+
+
+        <span class="go">
+
+            Explorar
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+
+            </svg>
+
+        </span>
+
+    </a>
+
+</div>
+
+
+
+<!-- ============================================================
+     COMO VEMOS O TERRITÓRIO
+     ============================================================ -->
+
+<section class="methods">
+
+    <div class="methods-header">
+
+        <h2>
+            Como vemos<br>
+            o território
+        </h2>
+
+
+        <p>
+
+            Diferentes técnicas de aquisição e análise permitem
+            transformar elementos físicos do território em informação
+            espacial e modelos digitais.
+
+        </p>
+
+    </div>
+
+
+    <div class="method-grid">
+
+
+        <div class="method">
+
+            <div class="method-number">
+                01 — AQUISIÇÃO
+            </div>
+
+            <h3>
+                LiDAR
+            </h3>
+
+            <p>
+                Captura tridimensional de elevada precisão através
+                de sensores laser terrestres e aéreos.
+            </p>
+
+        </div>
+
+
+        <div class="method">
+
+            <div class="method-number">
+                02 — AQUISIÇÃO
+            </div>
+
+            <h3>
+                Fotogrametria
+            </h3>
+
+            <p>
+                Reconstrução tridimensional a partir de imagens
+                aéreas e terrestres.
+            </p>
+
+        </div>
+
+
+        <div class="method">
+
+            <div class="method-number">
+                03 — ANÁLISE
+            </div>
+
+            <h3>
+                SIG
+            </h3>
+
+            <p>
+                Integração, análise e interpretação espacial dos
+                dados obtidos no território.
+            </p>
+
+        </div>
+
+
+        <div class="method">
+
+            <div class="method-number">
+                04 — RESULTADO
+            </div>
+
+            <h3>
+                Modelo 3D
+            </h3>
+
+            <p>
+                Transformação dos levantamentos em representações
+                digitais exploráveis do território.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     FRASE FINAL
+     ============================================================ -->
+
+<section class="atlas-final">
+
+    <div class="line"></div>
+
+
+    <h2>
+
+        Do subsolo<br>
+        à <em>superfície.</em>
+
+    </h2>
+
+
+    <p>
+
+        Um atlas digital para observar, documentar e compreender
+        o território através das suas diferentes dimensões.
+
+    </p>
+
+</section>
+
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+
+<footer>
+
+    <div class="footer-section">
+
+        <h3>
+            Créditos
+        </h3>
+
+        <p>
+            Modelos 3D produzidos por Lab. GEO-DS
+        </p>
+
+        <p>
+            Documentação digital do território
+        </p>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        © 2026 — Lab. GEO-DS | Universidade de Évora
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>
