@@ -20,33 +20,24 @@
 
 body{
     font-family:'Inter',sans-serif;
-
     background:
-        radial-gradient(circle at top left,#243019 0%,transparent 30%),
-        radial-gradient(circle at bottom right,#4b5b32 0%,transparent 30%),
+        radial-gradient(circle at top left,#1d3557 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#457b9d 0%,transparent 30%),
         #0b0f14;
 
     color:white;
-
     min-height:100vh;
 }
 
-
-/* ============================================================
-   BOTÃO
-   ============================================================ */
+/* BOTÃO */
 
 .top-bar{
-
     width:90%;
     max-width:1000px;
-
     margin:30px auto 0;
 }
 
-
 .back-button{
-
     display:inline-block;
 
     padding:12px 24px;
@@ -59,101 +50,50 @@ body{
 
     font-weight:600;
 
-    background:
-        linear-gradient(
-            135deg,
-            #7c8f57,
-            #b7c98a
-        );
+    background:linear-gradient(135deg,#2196f3,#21cbf3);
 
-    box-shadow:
-        0 0 15px
-        rgba(183,201,138,.35);
+    box-shadow:0 0 15px rgba(33,203,243,.4);
 
     transition:.3s ease;
 }
 
-
 .back-button:hover{
-
     transform:scale(1.05);
 
     box-shadow:
-        0 0 25px
-        rgba(183,201,138,.7);
+        0 0 25px rgba(33,203,243,.8);
 }
 
-
-/* ============================================================
-   TÍTULOS
-   ============================================================ */
+/* TÍTULOS */
 
 h1{
-
     text-align:center;
-
     font-size:52px;
-
     font-weight:700;
-
-    margin:30px 0 15px;
+    margin:30px 0 50px;
 }
-
-
-.intro{
-
-    max-width:700px;
-
-    margin:0 auto 50px;
-
-    padding:0 20px;
-
-    text-align:center;
-
-    color:#b8c5d0;
-
-    font-size:16px;
-
-    line-height:1.6;
-}
-
 
 h2{
-
-    width:90%;
-    max-width:1000px;
-
-    margin:45px auto 20px;
-
     text-align:center;
-
     font-size:28px;
-
     font-weight:600;
+    margin:45px 0 20px;
 }
 
-
-/* ============================================================
-   VIEWERS
-   ============================================================ */
+/* VIEWERS */
 
 .viewer-container{
 
-    position:relative;
-
     width:90%;
     max-width:1000px;
 
     margin:0 auto 50px;
 
-    background:
-        rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.06);
 
-    border:
-        1px solid rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.12);
 
-    backdrop-filter:
-        blur(12px);
+    backdrop-filter:blur(12px);
 
     border-radius:22px;
 
@@ -162,12 +102,10 @@ h2{
     transition:.35s ease;
 
     box-shadow:
-        0 0 20px
-        rgba(0,0,0,0.35);
+        0 0 20px rgba(0,0,0,0.35);
 
     padding:20px;
 }
-
 
 .viewer-container::before{
 
@@ -187,91 +125,22 @@ h2{
     pointer-events:none;
 }
 
-
 .viewer-container:hover{
 
-    transform:
-        translateY(-8px);
+    transform:translateY(-8px);
 
-    border-color:
-        #b7c98a;
+    border-color:#64b5f6;
 
     box-shadow:
-        0 0 25px
-        rgba(183,201,138,.35),
-
-        0 0 60px
-        rgba(183,201,138,.15);
+        0 0 25px rgba(100,181,246,0.35),
+        0 0 60px rgba(100,181,246,0.15);
 }
-
 
 iframe{
-
     width:100%;
-
     height:600px;
-
     border:none;
-
     border-radius:15px;
-}
-
-
-/* ============================================================
-   MOBILE
-   ============================================================ */
-
-@media(max-width:700px){
-
-    h1{
-
-        font-size:38px;
-
-        margin-top:30px;
-    }
-
-
-    h2{
-
-        font-size:23px;
-
-        padding:0 10px;
-    }
-
-
-    iframe{
-
-        height:450px;
-    }
-
-
-    .viewer-container{
-
-        width:94%;
-
-        padding:12px;
-
-        border-radius:18px;
-    }
-
-}
-
-
-@media(max-width:500px){
-
-    iframe{
-
-        height:350px;
-    }
-
-
-    .back-button{
-
-        padding:10px 18px;
-
-        font-size:14px;
-    }
-
 }
 
 </style>
@@ -280,143 +149,101 @@ iframe{
 
 <body>
 
-<!-- ============================================================
-     BOTÃO VOLTAR
-     ============================================================ -->
-
 <div class="top-bar">
-
-```
-<a href="cidades.html" class="back-button">
-
-    ← Voltar a Cidades e Território
-
-</a>
-```
-
+    <a href="index.html" class="back-button">
+        ← Voltar ao Início
+    </a>
 </div>
-
-<!-- ============================================================
-     TÍTULO
-     ============================================================ -->
 
 <h1>Modelos 3D – Alcácer do Sal</h1>
 
-<p class="intro">
-
-```
-Exploração digital de Alcácer do Sal e do seu território,
-incluindo o centro urbano, património histórico e diferentes
-zonas arqueológicas documentadas em modelos tridimensionais.
-```
-
-</p>
-
-<!-- ============================================================
-     MODELO — ALCÁCER DO SAL
-     ============================================================ -->
-
 <h2>Alcácer do Sal</h2>
-
 <div class="viewer-container">
-
-```
-<iframe
-    title="Alcácer do Sal"
-    allowfullscreen
-    src="https://realitymax.co/embed/t2RBAM">
-</iframe>
-```
-
+    <iframe
+        title="Alcácer do Sal"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/t2RBAM">
+    </iframe>
 </div>
-
-<!-- ============================================================
-     MODELO — CASTELO
-     ============================================================ -->
 
 <h2>Castelo de Alcácer do Sal</h2>
-
 <div class="viewer-container">
-
-```
-<iframe
-    title="Castelo de Alcácer do Sal"
-    allowfullscreen
-    src="https://realitymax.co/embed/pniwbO">
-</iframe>
-```
-
+    <iframe
+        title="Castelo de Alcácer do Sal"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/pniwbO">
+    </iframe>
 </div>
-
-<!-- ============================================================
-     MODELO — ENCHURRASQUEIRA
-     ============================================================ -->
 
 <h2>Zona Arqueológica da Enchurrasqueira</h2>
-
 <div class="viewer-container">
-
-```
-<iframe
-    title="Enchurrasqueira"
-    allowfullscreen
-    src="https://realitymax.co/embed/AIvKQT">
-</iframe>
-```
-
+    <iframe
+        title="Enchurrasqueira"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/AIvKQT">
+    </iframe>
 </div>
-
-<!-- ============================================================
-     MODELO — BARROSINHA
-     ============================================================ -->
 
 <h2>Zona Arqueológica da Barrosinha</h2>
-
 <div class="viewer-container">
-
-```
-<iframe
-    title="Barrosinha"
-    allowfullscreen
-    src="https://realitymax.co/embed/yL4nus">
-</iframe>
-```
-
+    <iframe
+        title="Barrosinha"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/yL4nus">
+    </iframe>
 </div>
-
-<!-- ============================================================
-     MODELO — BUGIO
-     ============================================================ -->
 
 <h2>Zona Arqueológica do Bugio</h2>
-
 <div class="viewer-container">
-
-```
-<iframe
-    title="Bugio"
-    allowfullscreen
-    src="https://realitymax.co/embed/6T0uEk">
-</iframe>
-```
-
+    <iframe
+        title="Bugio"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/6T0uEk">
+    </iframe>
 </div>
 
-<!-- ============================================================
-     MODELO — PORTO DE LAMA
-     ============================================================ -->
-
 <h2>Zona Arqueológica do Porto de Lama</h2>
-
 <div class="viewer-container">
+    <iframe
+        title="Porto de Lama"
+        frameborder="0"
+        allowfullscreen="true"
+        mozallowfullscreen="true"
+        width="640"
+        height="480"
+        webkitallowfullscreen="true"
+        src="https://realitymax.co/embed/LuIPE3">
+    </iframe>
+</div>
 
-```
-<iframe
-    title="Porto de Lama"
-    allowfullscreen
-    src="https://realitymax.co/embed/LuIPE3">
-</iframe>
-```
+</body>
+</html>
+
 
 </div>
 
