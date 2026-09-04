@@ -1,17 +1,19 @@
 <!DOCTYPE html>
+
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>GEO-DS — Atlas Digital do Território</title>
+```
+<title>GEO-DS — Atlas Digital do Território</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400&family=Inter:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400&family=Inter:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/geods.css">
+<link rel="stylesheet" href="css/geods.css">
 
-    <style>
+<style>
 /* ============================================================
    HOMEPAGE — TODOS OS MODELOS GEO-DS
    ============================================================ */
@@ -113,6 +115,10 @@
     border-color: rgba(255, 255, 255, .3);
 }
 
+/* ============================================================
+   VIEWER
+   ============================================================ */
+
 .model-viewer {
     position: relative;
     width: 100%;
@@ -122,10 +128,59 @@
 }
 
 .model-viewer iframe {
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 100%;
     border: 0;
     display: block;
+    background: #050607;
+}
+
+/* Indicador enquanto o iframe ainda não foi carregado */
+.model-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: #050607;
+    pointer-events: none;
+    transition: opacity .4s ease;
+}
+
+.model-loading span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+}
+
+/* Pequeno indicador animado */
+.model-loading::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-top-color: rgba(255, 255, 255, .65);
+    border-radius: 50%;
+    animation: model-spin .8s linear infinite;
+    margin-top: 52px;
+}
+
+@keyframes model-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Quando o modelo já carregou */
+.model-viewer.loaded .model-loading {
+    opacity: 0;
+    visibility: hidden;
 }
 
 .model-info {
@@ -154,9 +209,17 @@
     color: var(--text-main);
 }
 
-.lidar-terrestre .section-head h2 { color: #e5c5ae; }
-.multiespectral .section-head h2 { color: #9bd69f; }
-.hyperspectral .section-head h2 { color: #bda6ed; }
+.lidar-terrestre .section-head h2 {
+    color: #e5c5ae;
+}
+
+.multiespectral .section-head h2 {
+    color: #9bd69f;
+}
+
+.hyperspectral .section-head h2 {
+    color: #bda6ed;
+}
 
 .coming-soon {
     min-height: 260px;
@@ -185,18 +248,38 @@
 }
 
 @media (max-width: 900px) {
-    .models-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .models-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 650px) {
-    .models-home { padding: 25px 18px 70px; }
-    .models-intro { margin-bottom: 50px; }
-    .section-head { grid-template-columns: 1fr; gap: 8px; }
-    .section-number { padding-top: 0; }
-    .models-grid { grid-template-columns: 1fr; }
+    .models-home {
+        padding: 25px 18px 70px;
+    }
+
+    .models-intro {
+        margin-bottom: 50px;
+    }
+
+    .section-head {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .section-number {
+        padding-top: 0;
+    }
+
+    .models-grid {
+        grid-template-columns: 1fr;
+    }
 }
-    </style>
+</style>
+```
+
 </head>
+
 <body>
 
 <!-- ============================================================
@@ -208,12 +291,31 @@
         <img src="images/GEODS.png" alt="GEO-DS LAB" class="logo">
         <span class="sub">UNIVERSIDADE DE ÉVORA</span>
     </a>
-    <div class="geods-links">
-        <a href="#01" class="nav-lidar-aereo"><span class="dot"></span><span class="txt">LiDAR Aéreo</span></a>
-        <a href="#02" class="nav-lidar-terrestre"><span class="dot"></span><span class="txt">LiDAR Terrestre</span></a>
-        <a href="#03" class="nav-multiespectral"><span class="dot"></span><span class="txt">Multiespectral</span></a>
-        <a href="#04" class="nav-hiperespectral"><span class="dot"></span><span class="txt">Hiperespectral</span></a>
-    </div>
+
+```
+<div class="geods-links">
+    <a href="#01" class="nav-lidar-aereo">
+        <span class="dot"></span>
+        <span class="txt">LiDAR Aéreo</span>
+    </a>
+
+    <a href="#02" class="nav-lidar-terrestre">
+        <span class="dot"></span>
+        <span class="txt">LiDAR Terrestre</span>
+    </a>
+
+    <a href="#03" class="nav-multiespectral">
+        <span class="dot"></span>
+        <span class="txt">Multiespectral</span>
+    </a>
+
+    <a href="#04" class="nav-hiperespectral">
+        <span class="dot"></span>
+        <span class="txt">Hiperespectral</span>
+    </a>
+</div>
+```
+
 </nav>
 
 <!-- ============================================================
@@ -222,1252 +324,1899 @@
 
 <main class="models-home">
 
-    <section class="models-intro">
-        <div class="eyebrow">ATLAS DIGITAL DO TERRITÓRIO</div>
+```
+<section class="models-intro">
 
-        <h2>
-            Todos os modelos.<br>
-            <em>Uma só página.</em>
-        </h2>
+    <div class="eyebrow">
+        ATLAS DIGITAL DO TERRITÓRIO
+    </div>
 
-        <p>
-            Explora os modelos digitais GEO-DS organizados pelas principais
-            tecnologias de aquisição e análise do território.
-        </p>
-    </section>
+    <h2>
+        Todos os modelos.<br>
+        <em>Uma só página.</em>
+    </h2>
 
-    <section class="technology lidar-aereo" id="01">
-        <div class="section-head">
-            <div class="section-number">01</div>
-            <div>
-                <h2>LiDAR Aéreo</h2>
-                <p>Captura do território a partir do céu. Nuvens de pontos, modelos digitais de elevação e paisagem.</p>
+    <p>
+        Explora os modelos digitais GEO-DS organizados pelas principais
+        tecnologias de aquisição e análise do território.
+    </p>
+
+</section>
+
+
+<!-- ========================================================
+     01 — LIDAR AÉREO
+     ======================================================== -->
+
+<section class="technology lidar-aereo" id="01">
+
+    <div class="section-head">
+
+        <div class="section-number">
+            01
+        </div>
+
+        <div>
+            <h2>LiDAR Aéreo</h2>
+
+            <p>
+                Captura do território a partir do céu. Nuvens de pontos,
+                modelos digitais de elevação e paisagem.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="models-grid">
+
+
+        <!-- Antiga Mina do Rosalgar -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Antiga Mina do Rosalgar"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/R0zTic">
+                </iframe>
+
             </div>
-        </div>
 
-        <div class="models-grid">
-            <!-- Antiga Mina do Rosalgar -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Antiga Mina do Rosalgar"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/R0zTic">
-                    </iframe>
-                </div>
+            <div class="model-info">
 
-                <div class="model-info">
-                    <h3>Antiga Mina do Rosalgar</h3>
+                <h3>
+                    Antiga Mina do Rosalgar
+                </h3>
 
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/R0zTic"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/R0zTic"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
 
-            <!-- Mosteiro dos Jerónimos (Igreja) -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro dos Jerónimos (Igreja)"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/jLCHmm">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro dos Jerónimos (Igreja)</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/jLCHmm"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Mosteiro dos Jerónimos -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro dos Jerónimos"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/XYc2l8">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro dos Jerónimos</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/XYc2l8"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Mosteiro de Alcobaça e Zona Envolvente -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro de Alcobaça e Zona Envolvente"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/vamtzR">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro de Alcobaça e Zona Envolvente</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/vamtzR"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Mosteiro de Alcobaça -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro de Alcobaça"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/D1xVtm">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro de Alcobaça</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/D1xVtm"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Villa Romana de Pisões -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Villa Romana de Pisões"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/V6DR7P">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Villa Romana de Pisões</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/V6DR7P"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Castelo de Évoramonte -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Castelo de Évoramonte"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/1_KJJO">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Castelo de Évoramonte</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/1_KJJO"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Castelo de Estremoz -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Castelo de Estremoz"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/CT3Q_L">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Castelo de Estremoz</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/CT3Q_L"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Convento das Maltezas -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Convento das Maltezas"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/Mq47SP">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Convento das Maltezas</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/Mq47SP"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Milreu – Modelo Geral -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Milreu – Modelo Geral"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/bq4S3c">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Milreu – Modelo Geral</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/bq4S3c"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Templo Romano -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Templo Romano"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/rR0l2K">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Templo Romano</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/rR0l2K"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Termas – Frigidarium -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Termas – Frigidarium"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/VnCqEI">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Termas – Frigidarium</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/VnCqEI"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Ruínas Romanas de Tróia -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Ruínas Romanas de Tróia"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/Hyw4nY">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Ruínas Romanas de Tróia</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/Hyw4nY"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Aula/Basílica de Tróia -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Aula/Basílica de Tróia"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/6GhAOs">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Aula/Basílica de Tróia</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/6GhAOs"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Alcácer do Sal -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Alcácer do Sal"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/t2RBAM">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Alcácer do Sal</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/t2RBAM"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Castelo de Alcácer do Sal -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Castelo de Alcácer do Sal"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/pniwbO">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Castelo de Alcácer do Sal</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/pniwbO"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Zona Arqueológica da Enchurrasqueira -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Zona Arqueológica da Enchurrasqueira"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/AIvKQT">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Zona Arqueológica da Enchurrasqueira</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/AIvKQT"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Zona Arqueológica da Barrosinha -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Zona Arqueológica da Barrosinha"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/yL4nus">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Zona Arqueológica da Barrosinha</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/yL4nus"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Zona Arqueológica do Bugio -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Zona Arqueológica do Bugio"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/6T0uEk">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Zona Arqueológica do Bugio</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/6T0uEk"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Zona Arqueológica do Porto de Lama -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Zona Arqueológica do Porto de Lama"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/LuIPE3">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Zona Arqueológica do Porto de Lama</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/LuIPE3"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Cais Palafítico da Carrasqueira -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Cais Palafítico da Carrasqueira"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/aczrAu">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Cais Palafítico da Carrasqueira</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/aczrAu"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Antiga Mina — Vale da Arca -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Antiga Mina — Vale da Arca"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/j_tSQC">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Antiga Mina — Vale da Arca</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/j_tSQC"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Vale da Arca — DEM -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Vale da Arca — DEM"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/0sJMNt">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Vale da Arca — DEM</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/0sJMNt"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Vale da Arca — Detalhe -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Vale da Arca — Detalhe"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/famzUR">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Vale da Arca — Detalhe</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/famzUR"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Modelo 3D + Vegetação com o Modelo Digital de Elevação -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Modelo 3D + Vegetação com o Modelo Digital de Elevação"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/rs8NJd">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Modelo 3D + Vegetação com o Modelo Digital de Elevação</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/rs8NJd"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Modelo 3D + Vegetação com o Modelo Digital de Terreno -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Modelo 3D + Vegetação com o Modelo Digital de Terreno"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/IrYTBe">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Modelo 3D + Vegetação com o Modelo Digital de Terreno</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/IrYTBe"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Vegetação com o Modelo Digital de Terreno -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Vegetação com o Modelo Digital de Terreno"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/_Siw8t">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Vegetação com o Modelo Digital de Terreno</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/_Siw8t"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Edifícios com Modelo Digital de Terreno -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Edifícios com Modelo Digital de Terreno"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/H81lCA">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Edifícios com Modelo Digital de Terreno</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/H81lCA"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Ruas e Chão com Modelo Digital de Terreno -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Ruas e Chão com Modelo Digital de Terreno"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/Bv3H1v">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Ruas e Chão com Modelo Digital de Terreno</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/Bv3H1v"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Carros com Modelo Digital de Terreno -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Carros com Modelo Digital de Terreno"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/SuBdRO">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Carros com Modelo Digital de Terreno</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/SuBdRO"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Colégio do Espírito Santo -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Colégio do Espírito Santo"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/fPPJ3_">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Colégio do Espírito Santo</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/fPPJ3_"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Escola de Ciências e Tecnologia (ECT) -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Escola de Ciências e Tecnologia (ECT)"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/34U2Ot">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Escola de Ciências e Tecnologia (ECT)</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/34U2Ot"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Sé de Évora -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Sé de Évora"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/uGUIqd">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Sé de Évora</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/uGUIqd"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Templo de Diana -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Templo de Diana"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/2Trmyl">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Templo de Diana</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/2Trmyl"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Palácio D. Manuel -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Palácio D. Manuel"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/fxdIzp">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Palácio D. Manuel</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/fxdIzp"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Igreja de São Francisco -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Igreja de São Francisco"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/c3YK0Z">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Igreja de São Francisco</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/c3YK0Z"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Mosteiro de Santa Clara-a-Velha -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro de Santa Clara-a-Velha"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/b_0FSX">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro de Santa Clara-a-Velha</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/b_0FSX"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <section class="technology lidar-terrestre" id="02">
-        <div class="section-head">
-            <div class="section-number">02</div>
-            <div>
-                <h2>LiDAR Terrestre</h2>
-                <p>Precisão milimétrica para explorar património, interiores e espaços históricos.</p>
             </div>
-        </div>
 
-        <div class="models-grid">
-            <!-- Gruta do Escoural -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Gruta do Escoural"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/A_VnFv">
-                    </iframe>
+        </article>
+
+
+        <!-- Mosteiro dos Jerónimos (Igreja) -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
                 </div>
 
-                <div class="model-info">
-                    <h3>Gruta do Escoural</h3>
+                <iframe
+                    title="Mosteiro dos Jerónimos (Igreja)"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/jLCHmm">
+                </iframe>
 
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/A_VnFv"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Mosteiro de Santa Clara-a-Velha – Interior e Sensores -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Mosteiro de Santa Clara-a-Velha – Interior e Sensores"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/aeKMDu">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Mosteiro de Santa Clara-a-Velha – Interior e Sensores</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/aeKMDu"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <section class="technology multiespectral" id="03">
-        <div class="section-head">
-            <div class="section-number">03</div>
-            <div>
-                <h2>Multiespectral</h2>
-                <p>Bandas e índices que revelam padrões invisíveis numa imagem convencional.</p>
             </div>
-        </div>
 
-        <div class="models-grid">
-            <!-- NDVI - Pradaria de Tróia -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="NDVI - Pradaria de Tróia"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/qQopkC">
-                    </iframe>
-                </div>
+            <div class="model-info">
 
-                <div class="model-info">
-                    <h3>NDVI - Pradaria de Tróia</h3>
+                <h3>
+                    Mosteiro dos Jerónimos (Igreja)
+                </h3>
 
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/qQopkC"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/jLCHmm"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
 
-            <!-- Tapada de Coelheiros -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Tapada de Coelheiros"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/Vlm_yE">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Tapada de Coelheiros</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/Vlm_yE"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-            <!-- Distribuição de As e Cu na Antiga Mina de Trimpancho -->
-            <article class="model-card">
-                <div class="model-viewer">
-                    <iframe
-                        title="Distribuição de As e Cu na Antiga Mina de Trimpancho"
-                        frameborder="0"
-                        allowfullscreen="true"
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        width="640"
-                        height="480"
-                        src="https://realitymax.co/embed/h_YxUz">
-                    </iframe>
-                </div>
-
-                <div class="model-info">
-                    <h3>Distribuição de As e Cu na Antiga Mina de Trimpancho</h3>
-
-                    <a
-                        class="model-link"
-                        href="https://realitymax.co/embed/h_YxUz"
-                        target="_blank"
-                        rel="noopener">
-                        Explorar modelo ↗
-                    </a>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <section class="technology hyperspectral" id="04">
-        <div class="section-head">
-            <div class="section-number">04</div>
-            <div>
-                <h2>Hiperespectral</h2>
-                <p>Ver o invisível através da assinatura espectral da matéria.</p>
             </div>
+
+        </article>
+
+
+        <!-- Mosteiro dos Jerónimos -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Mosteiro dos Jerónimos"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/XYc2l8">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Mosteiro dos Jerónimos
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/XYc2l8"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Mosteiro de Alcobaça e Zona Envolvente -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Mosteiro de Alcobaça e Zona Envolvente"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/vamtzR">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Mosteiro de Alcobaça e Zona Envolvente
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/vamtzR"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Mosteiro de Alcobaça -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Mosteiro de Alcobaça"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/D1xVtm">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Mosteiro de Alcobaça
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/D1xVtm"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Villa Romana de Pisões -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Villa Romana de Pisões"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/V6DR7P">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Villa Romana de Pisões
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/V6DR7P"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Castelo de Évoramonte -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Castelo de Évoramonte"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/1_KJJO">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Castelo de Évoramonte
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/1_KJJO"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Castelo de Estremoz -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Castelo de Estremoz"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/CT3Q_L">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Castelo de Estremoz
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/CT3Q_L"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Convento das Maltezas -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Convento das Maltezas"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/Mq47SP">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Convento das Maltezas
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/Mq47SP"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Milreu – Modelo Geral -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Milreu – Modelo Geral"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/bq4S3c">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Milreu – Modelo Geral
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/bq4S3c"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Templo Romano -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Templo Romano"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/rR0l2K">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Templo Romano
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/rR0l2K"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Termas – Frigidarium -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Termas – Frigidarium"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/VnCqEI">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Termas – Frigidarium
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/VnCqEI"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Ruínas Romanas de Tróia -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Ruínas Romanas de Tróia"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/Hyw4nY">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Ruínas Romanas de Tróia
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/Hyw4nY"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Aula/Basílica de Tróia -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Aula/Basílica de Tróia"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/6GhAOs">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Aula/Basílica de Tróia
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/6GhAOs"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Alcácer do Sal -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Alcácer do Sal"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/t2RBAM">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Alcácer do Sal
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/t2RBAM"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Castelo de Alcácer do Sal -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Castelo de Alcácer do Sal"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/pniwbO">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Castelo de Alcácer do Sal
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/pniwbO"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Zona Arqueológica da Enchurrasqueira -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Zona Arqueológica da Enchurrasqueira"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/AIvKQT">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Zona Arqueológica da Enchurrasqueira
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/AIvKQT"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Zona Arqueológica da Barrosinha -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Zona Arqueológica da Barrosinha"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/yL4nus">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Zona Arqueológica da Barrosinha
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/yL4nus"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Zona Arqueológica do Bugio -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Zona Arqueológica do Bugio"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/6T0uEk">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Zona Arqueológica do Bugio
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/6T0uEk"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Zona Arqueológica do Porto de Lama -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Zona Arqueológica do Porto de Lama"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/LuIPE3">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Zona Arqueológica do Porto de Lama
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/LuIPE3"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Cais Palafítico da Carrasqueira -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Cais Palafítico da Carrasqueira"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/aczrAu">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Cais Palafítico da Carrasqueira
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/aczrAu"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Antiga Mina — Vale da Arca -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Antiga Mina — Vale da Arca"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/j_tSQC">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Antiga Mina — Vale da Arca
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/j_tSQC"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Vale da Arca — DEM -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Vale da Arca — DEM"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/0sJMNt">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Vale da Arca — DEM
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/0sJMNt"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Vale da Arca — Detalhe -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Vale da Arca — Detalhe"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/famzUR">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Vale da Arca — Detalhe
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/famzUR"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Modelo 3D + Vegetação com o Modelo Digital de Elevação -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Modelo 3D + Vegetação com o Modelo Digital de Elevação"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/rs8NJd">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Modelo 3D + Vegetação com o Modelo Digital de Elevação
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/rs8NJd"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Modelo 3D + Vegetação com o Modelo Digital de Terreno -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Modelo 3D + Vegetação com o Modelo Digital de Terreno"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/IrYTBe">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Modelo 3D + Vegetação com o Modelo Digital de Terreno
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/IrYTBe"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Vegetação com o Modelo Digital de Terreno -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Vegetação com o Modelo Digital de Terreno"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/_Siw8t">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Vegetação com o Modelo Digital de Terreno
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/_Siw8t"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Edifícios com Modelo Digital de Terreno -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Edifícios com Modelo Digital de Terreno"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/H81lCA">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Edifícios com Modelo Digital de Terreno
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/H81lCA"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Ruas e Chão com Modelo Digital de Terreno -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Ruas e Chão com Modelo Digital de Terreno"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/Bv3H1v">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Ruas e Chão com Modelo Digital de Terreno
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/Bv3H1v"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Carros com Modelo Digital de Terreno -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Carros com Modelo Digital de Terreno"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/SuBdRO">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Carros com Modelo Digital de Terreno
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/SuBdRO"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Colégio do Espírito Santo -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Colégio do Espírito Santo"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/fPPJ3_">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Colégio do Espírito Santo
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/fPPJ3_"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Escola de Ciências e Tecnologia (ECT) -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Escola de Ciências e Tecnologia (ECT)"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/34U2Ot">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Escola de Ciências e Tecnologia (ECT)
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/34U2Ot"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Sé de Évora -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Sé de Évora"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/uGUIqd">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Sé de Évora
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/uGUIqd"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Templo de Diana -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Templo de Diana"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/2Trmyl">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Templo de Diana
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/2Trmyl"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Palácio D. Manuel -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Palácio D. Manuel"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/fxdIzp">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Palácio D. Manuel
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/fxdIzp"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Igreja de São Francisco -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Igreja de São Francisco"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/c3YK0Z">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Igreja de São Francisco
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/c3YK0Z"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Mosteiro de Santa Clara-a-Velha -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Mosteiro de Santa Clara-a-Velha"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/b_0FSX">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Mosteiro de Santa Clara-a-Velha
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/b_0FSX"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ========================================================
+     02 — LIDAR TERRESTRE
+     ======================================================== -->
+
+<section class="technology lidar-terrestre" id="02">
+
+    <div class="section-head">
+
+        <div class="section-number">
+            02
         </div>
 
-        <div class="coming-soon">
-            <div>
-                <span>EM BREVE</span>
-                <h3>Os primeiros modelos hiperespectrais estão a ser preparados.</h3>
-            </div>
+        <div>
+            <h2>LiDAR Terrestre</h2>
+
+            <p>
+                Precisão milimétrica para explorar património,
+                interiores e espaços históricos.
+            </p>
         </div>
-    </section>
+
+    </div>
+
+
+    <div class="models-grid">
+
+
+        <!-- Gruta do Escoural -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Gruta do Escoural"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/A_VnFv">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Gruta do Escoural
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/A_VnFv"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Mosteiro de Santa Clara-a-Velha – Interior e Sensores -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Mosteiro de Santa Clara-a-Velha – Interior e Sensores"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/aeKMDu">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Mosteiro de Santa Clara-a-Velha – Interior e Sensores
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/aeKMDu"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ========================================================
+     03 — MULTIESPECTRAL
+     ======================================================== -->
+
+<section class="technology multiespectral" id="03">
+
+    <div class="section-head">
+
+        <div class="section-number">
+            03
+        </div>
+
+        <div>
+            <h2>Multiespectral</h2>
+
+            <p>
+                Bandas e índices que revelam padrões invisíveis
+                numa imagem convencional.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="models-grid">
+
+
+        <!-- NDVI - Pradaria de Tróia -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="NDVI - Pradaria de Tróia"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/qQopkC">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    NDVI - Pradaria de Tróia
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/qQopkC"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Tapada de Coelheiros -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Tapada de Coelheiros"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/Vlm_yE">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Tapada de Coelheiros
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/Vlm_yE"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Distribuição de As e Cu na Antiga Mina de Trimpancho -->
+        <article class="model-card">
+
+            <div class="model-viewer">
+
+                <div class="model-loading">
+                    <span>A carregar modelo</span>
+                </div>
+
+                <iframe
+                    title="Distribuição de As e Cu na Antiga Mina de Trimpancho"
+                    frameborder="0"
+                    allowfullscreen="true"
+                    mozallowfullscreen="true"
+                    webkitallowfullscreen="true"
+                    data-src="https://realitymax.co/embed/h_YxUz">
+                </iframe>
+
+            </div>
+
+            <div class="model-info">
+
+                <h3>
+                    Distribuição de As e Cu na Antiga Mina de Trimpancho
+                </h3>
+
+                <a
+                    class="model-link"
+                    href="https://realitymax.co/embed/h_YxUz"
+                    target="_blank"
+                    rel="noopener">
+                    Explorar modelo ↗
+                </a>
+
+            </div>
+
+        </article>
+
+    </div>
+</section>
+
+
+<!-- ========================================================
+     04 — HIPERESPECTRAL
+     ======================================================== -->
+
+<section class="technology hyperspectral" id="04">
+
+    <div class="section-head">
+
+        <div class="section-number">
+            04
+        </div>
+
+        <div>
+            <h2>Hiperespectral</h2>
+
+            <p>
+                Ver o invisível através da assinatura espectral da matéria.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="coming-soon">
+
+        <div>
+
+            <span>
+                EM BREVE
+            </span>
+
+            <h3>
+                Os primeiros modelos hiperespectrais
+                estão a ser preparados.
+            </h3>
+
+        </div>
+
+    </div>
+
+</section>
+```
+
 </main>
+
+<!-- ============================================================
+     LAZY LOADING DOS MODELOS REALITYMAX
+     ============================================================ -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const iframes = document.querySelectorAll(
+        ".model-viewer iframe[data-src]"
+    );
+
+    /*
+     * Cada iframe só é inicializado quando está próximo
+     * da área visível do utilizador.
+     *
+     * 800px significa que o carregamento começa antes
+     * de o cartão entrar no ecrã.
+     */
+
+    const observer = new IntersectionObserver(
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
+
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                const iframe = entry.target;
+                const viewer = iframe.closest(".model-viewer");
+                const src = iframe.dataset.src;
+
+                if (!src) {
+                    return;
+                }
+
+                /*
+                 * Só agora colocamos o endereço no iframe.
+                 * Antes disso o RealityMax não é carregado.
+                 */
+
+                iframe.src = src;
+
+                /*
+                 * Removemos o data-src para garantir
+                 * que este iframe não volta a ser processado.
+                 */
+
+                iframe.removeAttribute("data-src");
+
+                /*
+                 * O iframe já foi inicializado.
+                 * Deixa de ser observado.
+                 */
+
+                observer.unobserve(iframe);
+
+                /*
+                 * O indicador de carregamento continua visível
+                 * até o iframe disparar o evento "load".
+                 */
+
+                iframe.addEventListener("load", function () {
+
+                    if (viewer) {
+                        viewer.classList.add("loaded");
+                    }
+
+                }, { once: true });
+
+            });
+
+        },
+        {
+            root: null,
+
+            /*
+             * Começa a carregar o modelo quando estiver
+             * a aproximadamente 800px do viewport.
+             */
+
+            rootMargin: "800px 0px",
+
+            threshold: 0
+        }
+    );
+
+
+    /*
+     * Começamos a observar todos os iframes.
+     */
+
+    iframes.forEach(function (iframe) {
+        observer.observe(iframe);
+    });
+
+});
+
+</script>
 
 </body>
 </html>
