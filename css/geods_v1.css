@@ -1,0 +1,784 @@
+/* =========================================================
+   GEO-DS — GLOBAL CSS
+   ========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#080b0f;
+    --bg-soft:#0d1117;
+    --surface:#11161d;
+    --surface-hover:#151c24;
+
+    --text:#f1f3f5;
+    --text-soft:#a8b0ba;
+    --text-muted:#6f7883;
+
+    --border:rgba(255,255,255,.09);
+    --border-hover:rgba(255,255,255,.18);
+
+    --minas-glow:#d6a85f;
+    --patrimonio-glow:#b68cff;
+    --cidades-glow:#66b8ff;
+    --pradarias-glow:#79d68a;
+
+    --font:"Inter",sans-serif;
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font);
+    line-height:1.5;
+    overflow-x:hidden;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+img{
+    max-width:100%;
+    display:block;
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
+
+.geods-nav{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+    padding:16px 32px;
+
+    background:rgba(8,11,15,.92);
+    border-bottom:1px solid var(--border);
+
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+
+    flex-wrap:wrap;
+}
+
+
+/* ---------------------------------------------------------
+   LOGO / MARCA
+   --------------------------------------------------------- */
+
+.geods-brand{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    transition:opacity .2s ease;
+}
+
+.geods-brand:hover{
+    opacity:.8;
+}
+
+.geods-brand .logo{
+    width:100px;
+    height:auto;
+}
+
+.geods-brand .sub{
+    margin-top:4px;
+
+    font-size:8px;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+
+    color:var(--text-muted);
+
+    white-space:nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   LINKS DA NAVEGAÇÃO
+   --------------------------------------------------------- */
+
+.geods-links{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+
+    gap:6px;
+
+    flex-wrap:wrap;
+}
+
+.geods-links a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    padding:9px 14px;
+
+    border:1px solid transparent;
+    border-radius:999px;
+
+    font-size:14px;
+    font-weight:500;
+
+    color:var(--text-soft);
+
+    white-space:nowrap;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.geods-links a:hover{
+    color:var(--text);
+    background:rgba(255,255,255,.05);
+    border-color:var(--border);
+
+    transform:translateY(-1px);
+}
+
+
+/* =========================================================
+   DOTS DA NAVEGAÇÃO
+   ========================================================= */
+
+.geods-links a .dot{
+    display:block;
+
+    width:7px;
+    height:7px;
+
+    flex:0 0 7px;
+
+    border-radius:50%;
+
+    background:#777;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+/* LiDAR Aéreo */
+
+.geods-links a.nav-lidar-aereo .dot{
+    background:var(--patrimonio-glow);
+}
+
+.geods-links a.nav-lidar-aereo:hover .dot{
+    transform:scale(1.25);
+    box-shadow:0 0 10px var(--patrimonio-glow);
+}
+
+
+/* LiDAR Terrestre */
+
+.geods-links a.nav-lidar-terrestre .dot{
+    background:var(--minas-glow);
+}
+
+.geods-links a.nav-lidar-terrestre:hover .dot{
+    transform:scale(1.25);
+    box-shadow:0 0 10px var(--minas-glow);
+}
+
+
+/* Multiespectral */
+
+.geods-links a.nav-multiespectral .dot{
+    background:var(--cidades-glow);
+}
+
+.geods-links a.nav-multiespectral:hover .dot{
+    transform:scale(1.25);
+    box-shadow:0 0 10px var(--cidades-glow);
+}
+
+
+/* Hiperespectral */
+
+.geods-links a.nav-hiperespectral .dot{
+    background:var(--pradarias-glow);
+}
+
+.geods-links a.nav-hiperespectral:hover .dot{
+    transform:scale(1.25);
+    box-shadow:0 0 10px var(--pradarias-glow);
+}
+
+
+/* =========================================================
+   INTRO / HERO DOS MODELOS
+   ========================================================= */
+
+.models-intro{
+    max-width:1100px;
+
+    margin:0 auto;
+
+    padding:110px 32px 80px;
+}
+
+.models-intro .eyebrow{
+    margin-bottom:20px;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:.18em;
+    text-transform:uppercase;
+
+    color:var(--text-muted);
+}
+
+.models-intro h2{
+    font-size:clamp(42px,7vw,82px);
+
+    font-weight:600;
+    line-height:.98;
+    letter-spacing:-.045em;
+}
+
+.models-intro h2 em{
+    font-style:normal;
+    color:var(--text-muted);
+}
+
+.models-intro p{
+    max-width:650px;
+
+    margin-top:28px;
+
+    font-size:17px;
+    line-height:1.7;
+
+    color:var(--text-soft);
+}
+
+
+/* =========================================================
+   STRATUM / SECÇÕES
+   ========================================================= */
+
+.stratum{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:30px;
+
+    padding:42px 48px;
+
+    margin:0 auto;
+
+    max-width:1200px;
+
+    border-top:1px solid var(--border);
+
+    transition:
+        padding-left .3s ease,
+        background .3s ease;
+}
+
+.stratum:hover{
+    padding-left:58px;
+    background:rgba(255,255,255,.015);
+}
+
+.stratum .number{
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.12em;
+
+    color:var(--text-muted);
+}
+
+.stratum h2{
+    font-size:clamp(25px,4vw,42px);
+
+    font-weight:500;
+    line-height:1.1;
+
+    letter-spacing:-.025em;
+}
+
+.stratum p{
+    max-width:500px;
+
+    margin-top:8px;
+
+    color:var(--text-soft);
+
+    font-size:14px;
+    line-height:1.6;
+}
+
+.stratum .go{
+    flex-shrink:0;
+
+    font-size:24px;
+
+    color:var(--text-muted);
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+.stratum:hover .go{
+    color:var(--text);
+    transform:translateX(5px);
+}
+
+
+/* =========================================================
+   CARDS DOS MODELOS
+   ========================================================= */
+
+.models-grid{
+    width:100%;
+    max-width:1200px;
+
+    margin:0 auto;
+
+    padding:20px 32px 80px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(320px,1fr));
+
+    gap:24px;
+}
+
+
+/* ---------------------------------------------------------
+   CARD
+   --------------------------------------------------------- */
+
+.card{
+    width:100%;
+    max-width:100%;
+
+    overflow:hidden;
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+
+    background:var(--surface-hover);
+
+    border-color:var(--border-hover);
+}
+
+
+/* ---------------------------------------------------------
+   TÍTULO DO CARD
+   --------------------------------------------------------- */
+
+.card h3{
+    padding:20px 20px 16px;
+
+    font-size:17px;
+    font-weight:600;
+
+    line-height:1.3;
+}
+
+.card p{
+    padding:0 20px 18px;
+
+    color:var(--text-soft);
+
+    font-size:13px;
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   VIEWER / REALITYMAX
+   ========================================================= */
+
+.viewer-container{
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:4 / 3;
+
+    overflow:hidden;
+
+    background:#05070a;
+}
+
+.viewer-container iframe{
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    border:0;
+
+    display:block;
+
+    background:#05070a;
+}
+
+
+/* ---------------------------------------------------------
+   LOADING DO VIEWER
+   --------------------------------------------------------- */
+
+.viewer-loading{
+    position:absolute;
+
+    inset:0;
+
+    z-index:2;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#080b0f;
+
+    color:var(--text-muted);
+
+    font-size:12px;
+
+    pointer-events:none;
+
+    transition:opacity .4s ease;
+}
+
+.viewer-loading.hidden{
+    opacity:0;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width:900px){
+
+    .geods-nav{
+        padding:14px 22px;
+    }
+
+    .geods-links a{
+        font-size:13px;
+        padding:8px 11px;
+    }
+
+    .models-intro{
+        padding:90px 28px 65px;
+    }
+
+    .stratum{
+        padding:36px 32px;
+    }
+
+    .stratum:hover{
+        padding-left:40px;
+    }
+
+    .models-grid{
+        padding-left:24px;
+        padding-right:24px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TELEMÓVEL
+   ========================================================= */
+
+@media (max-width:640px){
+
+    /* ---------------------------------------------
+       NAVEGAÇÃO
+       --------------------------------------------- */
+
+    .geods-nav{
+        padding:14px 18px;
+
+        gap:12px;
+
+        align-items:center;
+    }
+
+    .geods-brand{
+        width:100%;
+
+        align-items:center;
+    }
+
+    .geods-brand .logo{
+        width:90px;
+    }
+
+    .geods-brand .sub{
+        font-size:7px;
+    }
+
+
+    /* ---------------------------------------------
+       LINKS — 2 x 2
+       --------------------------------------------- */
+
+    .geods-links{
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+
+        gap:6px;
+    }
+
+    .geods-links a{
+        width:100%;
+
+        display:flex;
+
+        justify-content:center;
+        align-items:center;
+
+        gap:7px;
+
+        padding:9px 6px;
+
+        font-size:11px;
+
+        white-space:nowrap;
+
+        border-radius:999px;
+    }
+
+
+    /* IMPORTANTE:
+       NÃO esconder o texto no telemóvel */
+
+    .geods-links a span.txt{
+        display:inline !important;
+    }
+
+
+    /* Dots continuam visíveis */
+
+    .geods-links a .dot{
+        width:6px;
+        height:6px;
+
+        flex:0 0 6px;
+    }
+
+
+    /* ---------------------------------------------
+       HERO
+       --------------------------------------------- */
+
+    .models-intro{
+        padding:70px 24px 55px;
+    }
+
+    .models-intro .eyebrow{
+        font-size:9px;
+        letter-spacing:.14em;
+    }
+
+    .models-intro h2{
+        font-size:clamp(38px,12vw,58px);
+    }
+
+    .models-intro p{
+        margin-top:22px;
+
+        font-size:15px;
+        line-height:1.65;
+    }
+
+
+    /* ---------------------------------------------
+       SECÇÕES
+       --------------------------------------------- */
+
+    .stratum{
+        padding:32px 24px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:16px;
+    }
+
+    .stratum:hover{
+        padding-left:24px;
+    }
+
+    .stratum h2{
+        font-size:30px;
+    }
+
+    .stratum p{
+        font-size:13px;
+    }
+
+    .stratum .go{
+        align-self:flex-end;
+    }
+
+
+    /* ---------------------------------------------
+       GRID
+       --------------------------------------------- */
+
+    .models-grid{
+        grid-template-columns:1fr;
+
+        padding:
+            16px
+            16px
+            60px;
+    }
+
+
+    /* ---------------------------------------------
+       CARDS
+       --------------------------------------------- */
+
+    .card{
+        width:100%;
+        max-width:350px;
+
+        margin:0 auto;
+    }
+
+    .card h3{
+        padding:17px 17px 13px;
+
+        font-size:16px;
+    }
+
+    .card p{
+        padding:
+            0
+            17px
+            16px;
+
+        font-size:12px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TELEMÓVEL MUITO PEQUENO
+   ========================================================= */
+
+@media (max-width:380px){
+
+    .geods-nav{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .geods-links{
+        gap:4px;
+    }
+
+    .geods-links a{
+        gap:5px;
+
+        padding:8px 4px;
+
+        font-size:10px;
+    }
+
+    .geods-links a .dot{
+        width:5px;
+        height:5px;
+
+        flex-basis:5px;
+    }
+
+    .models-intro{
+        padding-left:20px;
+        padding-right:20px;
+    }
+
+    .models-grid{
+        padding-left:12px;
+        padding-right:12px;
+    }
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE
+   ========================================================= */
+
+@media (prefers-reduced-motion:reduce){
+
+    html{
+        scroll-behavior:auto;
+    }
+
+    *,
+    *::before,
+    *::after{
+        transition:none !important;
+        animation:none !important;
+    }
+}
