@@ -12,8 +12,12 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
 
   var map = L.map('map');
-  var dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    { maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }).addTo(map);
+  var esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+  var esriOpts = { maxZoom: 19, maxNativeZoom: 16, attribution: 'Tiles &copy; Esri' };
+  var dark = L.layerGroup([
+    L.tileLayer(esri + 'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', esriOpts),
+    L.tileLayer(esri + 'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', esriOpts)
+  ]).addTo(map);
   var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     { maxZoom: 19, attribution: 'Tiles &copy; Esri' });
   var base = {}; base[T.street] = dark; base[T.sat] = sat;
