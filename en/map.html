@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO-DS — Interactive map</title>
+    <meta name="description" content="Interactive map showing the location of every GEO-DS Lab digital model.">
+    <link rel="alternate" hreflang="pt" href="https://EXEMPLO.pt/pt/mapa.html">
+    <link rel="alternate" hreflang="en" href="https://EXEMPLO.pt/en/map.html">
+    <link rel="alternate" hreflang="x-default" href="https://EXEMPLO.pt/pt/mapa.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400&family=Inter:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="../css/geods_v1.css">
+    <link rel="stylesheet" href="../css/atlas.css">
+</head>
+<body>
+
+<nav class="geods-nav">
+    <a href="index.html" class="geods-brand">
+        <img src="../images/GEODS.png" alt="GEO-DS LAB" class="logo">
+        <span class="sub">UNIVERSIDADE DE ÉVORA</span>
+    </a>
+
+    <div class="geods-links">
+        <a href="index.html#01" class="nav-lidar-aereo"><span class="dot"></span><span class="txt">Airborne LiDAR</span></a>
+        <a href="index.html#02" class="nav-lidar-terrestre"><span class="dot"></span><span class="txt">Terrestrial LiDAR</span></a>
+        <a href="index.html#03" class="nav-multiespectral"><span class="dot"></span><span class="txt">Multispectral</span></a>
+        <a href="index.html#04" class="nav-hiperespectral"><span class="dot"></span><span class="txt">Hyperspectral</span></a>
+        <a href="map.html" class="nav-mapa" aria-current="page"><span class="dot"></span><span class="txt">Map</span></a>
+    </div>
+
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+        <a href="../pt/mapa.html" hreflang="pt" lang="pt">PT</a>
+        <a href="../en/map.html" hreflang="en" lang="en" aria-current="page">EN</a>
+    </div>
+</nav>
+
+<main class="map-page">
+    <div id="map" role="application" aria-label="Map"></div>
+    <aside class="map-panel" aria-live="polite">
+        <div id="filters" class="map-filters"></div>
+        <p id="count" class="map-count"></p>
+        <div id="detail"></div>
+    </aside>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="../data/modelos.js"></script>
+<script src="../js/mapa.js"></script>
+</body>
+</html>
