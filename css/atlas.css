@@ -75,3 +75,39 @@
     .section-number { padding-top: 0; }
     .models-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- Mapa ---------- */
+.geods-links a.nav-mapa .dot { background: #fff; }
+.geods-links a[aria-current="page"] { color: var(--text); background: rgba(255,255,255,.08); border-color: var(--border); }
+@media (max-width: 640px) { .geods-links a.nav-mapa { grid-column: 1 / -1; } }
+
+.map-page { display: grid; grid-template-columns: minmax(0, 1fr) 360px; height: calc(100vh - 96px); min-height: 520px; }
+#map { height: 100%; min-height: 0; background: #05070a; }
+.map-panel { overflow-y: auto; padding: 20px; border-left: 1px solid var(--border); background: var(--bg-soft); }
+.map-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text-muted); font: 500 12px var(--font); cursor: pointer; }
+.chip.on { color: var(--text); border-color: var(--border-hover); background: rgba(255,255,255,.06); }
+.chip:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.map-count { margin: 14px 0 20px; font: 11px var(--font-mono); color: var(--text-faint); letter-spacing: .05em; }
+.map-hint, .map-note { color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+.map-note { margin: 12px 0; font-size: 12px; color: var(--minas-glow); }
+.map-thumb { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; margin-bottom: 14px; }
+.map-tag { display: inline-block; font: 11px var(--font-mono); letter-spacing: .06em; margin-bottom: 8px; }
+.map-tag.aereo { color: var(--patrimonio-glow); } .map-tag.terrestre { color: var(--minas-glow); } .map-tag.multi { color: var(--cidades-glow); }
+.map-panel h2 { font-family: var(--font-display); font-size: 26px; font-weight: 500; line-height: 1.15; margin-bottom: 14px; }
+.map-panel dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin-bottom: 16px; font-size: 14px; }
+.map-panel dt { color: var(--text-faint); font: 11px var(--font-mono); padding-top: 3px; }
+.map-panel dd { color: var(--text-soft); }
+
+.pin { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #080b0f; box-shadow: 0 0 0 1px rgba(255,255,255,.45); }
+.chip .pin { width: 9px; height: 9px; border-width: 1px; box-shadow: none; }
+.pin.aereo { background: var(--patrimonio-glow); } .pin.terrestre { background: var(--minas-glow); } .pin.multi { background: var(--cidades-glow); }
+.marker-cluster { background: rgba(255,255,255,.28); }
+.marker-cluster div { background: rgba(255,255,255,.9); color: #080b0f; font: 600 12px var(--font); }
+
+@media (max-width: 900px) {
+    .map-page { grid-template-columns: 1fr; grid-template-rows: 60vh auto; height: auto; }
+    .map-panel { border-left: 0; border-top: 1px solid var(--border); }
+}
+.marker-cluster { border-radius: 50%; }
+.marker-cluster div { width: 30px; height: 30px; margin: 5px; line-height: 30px; text-align: center; border-radius: 50%; }
