@@ -111,3 +111,14 @@
 }
 .marker-cluster { border-radius: 50%; }
 .marker-cluster div { width: 30px; height: 30px; margin: 5px; line-height: 30px; text-align: center; border-radius: 50%; }
+
+/* Área de toque dos pontos (36px) */
+.pin-hit { display: flex; align-items: center; justify-content: center; }
+.map-close { display: none; }
+
+/* Telemóvel: o detalhe abre como folha por cima do mapa */
+@media (max-width: 900px) {
+    #detail.open { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; max-height: 55vh; overflow-y: auto; padding: 16px 18px 24px; background: var(--bg-soft); border-top: 1px solid var(--border-hover); border-radius: 16px 16px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.55); }
+    #detail.open .map-thumb { max-height: 150px; }
+    .map-close { display: block; position: absolute; top: 8px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255,255,255,.08); color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; }
+}
