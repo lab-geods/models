@@ -1,0 +1,77 @@
+/* GEO-DS — estilos da página de modelos (partilhado por /pt/ e /en/)
+   Vem depois de geods_v1.css. */
+
+:root {
+    --text-main: var(--text);
+    --text-dim: var(--text-soft);
+    --text-faint: var(--text-muted);
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-display: 'Fraunces', serif;
+}
+
+/* ---------- Seletor de idioma ---------- */
+.geods-nav .lang-switch { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; }
+.geods-nav .lang-switch a { display: inline-block; padding: 5px 12px; border-radius: 999px; color: var(--text-dim); text-decoration: none; transition: background .2s ease, color .2s ease; }
+.geods-nav .lang-switch a:hover { color: var(--text-main); }
+.geods-nav .lang-switch a[aria-current="page"] { background: rgba(255,255,255,.16); color: var(--text-main); pointer-events: none; }
+.geods-nav .lang-switch a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* Links e seletor ficam juntos à direita; a marca fica à esquerda */
+.geods-nav .geods-links { margin-left: auto; }
+.geods-nav .lang-switch { flex-shrink: 0; }
+
+/* Telemóvel: marca, links 2x2 e depois o seletor centrado */
+@media (max-width: 640px) {
+    .geods-nav .geods-links { margin-left: 0; }
+    .geods-nav .lang-switch { margin: 0 auto; }
+}
+
+/* ---------- Hero ---------- */
+.hero { width: 100%; padding: 90px 24px 50px; max-width: 1400px; margin: 0 auto; text-align: center; }
+.hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.hero-stat { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: .02em; }
+.hero-stat b { display: block; font-family: var(--font-display); font-size: 28px; font-weight: 500; color: var(--text-main); letter-spacing: 0; margin-bottom: 2px; }
+.hero-scroll-note { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; color: var(--text-faint); margin-top: 46px; }
+
+/* ---------- Secções ---------- */
+.models-home { max-width: 1400px; margin: 0 auto; padding: 40px 24px 100px; }
+.technology { max-width: 1100px; margin: 0 auto 100px; scroll-margin-top: 100px; }
+.section-head { display: grid; grid-template-columns: 90px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid rgba(255,255,255,.12); }
+.section-number { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); letter-spacing: .12em; padding-top: 12px; }
+.section-head h2 { font-family: var(--font-display); font-size: clamp(38px, 5vw, 65px); line-height: 1; font-weight: 500; margin: 0 0 14px; }
+.section-head p { max-width: 650px; margin: 0; color: var(--text-dim); line-height: 1.7; }
+.lidar-aereo .section-head h2 { color: var(--patrimonio-glow); }
+.lidar-terrestre .section-head h2 { color: var(--minas-glow); }
+.multiespectral .section-head h2 { color: var(--cidades-glow); }
+.hyperspectral .section-head h2 { color: var(--pradarias-glow); }
+
+/* ---------- Cards ---------- */
+.models-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.model-card { min-width: 0; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.11); border-radius: 14px; overflow: hidden; transition: transform .25s ease, border-color .25s ease; }
+.model-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.3); }
+.model-viewer { position: relative; width: 100%; aspect-ratio: 16 / 10; background: #050607; overflow: hidden; cursor: pointer; }
+.model-thumb-link { position: relative; display: block; width: 100%; height: 100%; }
+.model-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+.model-viewer:hover .model-thumb { transform: scale(1.04); }
+.model-thumb-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(5,6,7,0) 45%, rgba(5,6,7,.78) 100%); opacity: 0; transition: opacity .3s ease; }
+.model-viewer:hover .model-thumb-overlay { opacity: 1; }
+.model-thumb-overlay span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; color: #fff; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,.5); }
+.model-info { padding: 16px; }
+.model-info h3 { min-height: 42px; margin: 0 0 16px; font-size: 15px; line-height: 1.4; font-weight: 600; }
+.model-link { display: inline-block; font-family: var(--font-mono); font-size: 11px; letter-spacing: .03em; color: var(--text-dim); padding-bottom: 4px; border-bottom: 1px solid currentColor; }
+.model-link:hover { color: var(--text-main); }
+
+.coming-soon { min-height: 260px; display: grid; place-items: center; text-align: center; border: 1px dashed rgba(189,166,237,.35); border-radius: 14px; padding: 40px; }
+.coming-soon span { display: block; margin-bottom: 15px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; color: #bda6ed; }
+.coming-soon h3 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 500; }
+
+@media (max-width: 900px) { .models-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) {
+    .hero { padding: 60px 18px 30px; }
+    .hero-stats { gap: 26px; }
+    .hero-stat b { font-size: 22px; }
+    .models-home { padding: 25px 18px 70px; }
+    .section-head { grid-template-columns: 1fr; gap: 8px; }
+    .section-number { padding-top: 0; }
+    .models-grid { grid-template-columns: 1fr; }
+}
