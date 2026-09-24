@@ -2,10 +2,10 @@
   var lang = document.documentElement.lang === 'en' ? 'en' : 'pt';
   var T = {
     pt: { hint: 'Escolhe um ponto no mapa para ver o modelo.', sensor: 'Sensor', area: 'Área', explore: 'Explorar modelo ↗',
-          approx: 'Posição aproximada, por confirmar.', street: 'Mapa', sat: 'Satélite', n: ' modelos',
+          approx: 'Posição aproximada, por confirmar.', close: 'Fechar', street: 'Mapa', sat: 'Satélite', n: ' modelos',
           tech: { aereo: 'LiDAR Aéreo', terrestre: 'LiDAR Terrestre', multi: 'Multiespectral' } },
     en: { hint: 'Pick a point on the map to see the model.', sensor: 'Sensor', area: 'Area', explore: 'Explore model ↗',
-          approx: 'Approximate position, to be confirmed.', street: 'Map', sat: 'Satellite', n: ' models',
+          approx: 'Approximate position, to be confirmed.', close: 'Close', street: 'Map', sat: 'Satellite', n: ' models',
           tech: { aereo: 'Airborne LiDAR', terrestre: 'Terrestrial LiDAR', multi: 'Multispectral' } }
   }[lang];
 
@@ -36,7 +36,9 @@
     var rows = '';
     if (m.sensor) rows += '<dt>' + T.sensor + '</dt><dd>' + esc(m.sensor) + '</dd>';
     if (m.area) rows += '<dt>' + T.area + '</dt><dd>' + esc(m.area) + '</dd>';
+    detail.classList.add('open');
     detail.innerHTML =
+      '<button type="button" class="map-close" aria-label="' + T.close + '">&times;</button>' +
       '<img class="map-thumb" src="../images/' + m.img + '" alt="' + esc(m.title[lang]) + '">' +
       '<span class="map-tag ' + m.t + '">' + T.tech[m.t] + '</span>' +
       '<h2>' + esc(m.title[lang]) + '</h2>' +
@@ -45,10 +47,15 @@
       '<a class="model-link" href="https://realitymax.co/embed/' + m.url + '" target="_blank" rel="noopener">' + T.explore + '</a>';
   }
 
+  function hide() { detail.classList.remove('open'); detail.innerHTML = '<p class="map-hint">' + T.hint + '</p>'; }
+  var narrow = window.matchMedia('(max-width: 900px)');
+  detail.addEventListener('click', function (e) { if (e.target.closest('.map-close')) hide(); });
+  map.on('click', function () { if (narrow.matches) hide(); });
+
   var markers = MODELOS.map(function (m) {
     var mk = L.marker([m.lat, m.lng], {
       title: m.title[lang],
-      icon: L.divIcon({ className: '', html: '<span class="pin ' + m.t + '"></span>', iconSize: [16, 16] })
+      icon: L.divIcon({ className: 'pin-hit', html: '<span class="pin ' + m.t + '"></span>', iconSize: [36, 36] })
     });
     mk.on('click', function () { show(m); map.panTo(mk.getLatLng()); });
     return { m: m, mk: mk };
