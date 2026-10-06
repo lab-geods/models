@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101512">
+  <meta name="description" content="Explora o atlas digital do GEO-DS LAB, Universidade de Évora. Modelos do território e do património com LiDAR e imagem espectral.">
+  <title>GEO-DS — Atlas Digital do Território</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos incluídos: este ficheiro não depende do antigo geods_v1.css. */
+    :root {
+      color-scheme: dark;
+      --bg: #101512; --panel: #171e1a; --panel-hover: #1c2520;
+      --text: #eeeee6; --soft: #b4bdb4; --muted: #89958c;
+      --line: #ffffff16; --line-strong: #ffffff2b;
+      --mint: #bddbc7; --gold: #dbbc86; --blue: #a5c9df; --purple: #c5b4df;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --serif: 'Fraunces', Georgia, serif;
+      --mono: 'IBM Plex Mono', ui-monospace, monospace;
+      --page-width: 1360px; --gutter: clamp(20px, 4vw, 64px);
+      --nav-height: 84px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 110px; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.65 var(--sans); }
+    body.viewer-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button { color: inherit; }
+    button:disabled { cursor: default; opacity: .35; }
+    button, input, select { -webkit-tap-highlight-color: transparent; }
+    img, svg, canvas { max-width: 100%; }
+    img { display: block; }
+    button, a, input, select, canvas { outline-offset: 5px; }
+    :focus-visible { outline: 2px solid var(--mint); }
+    ::selection { background: var(--mint); color: var(--bg); }
+    [hidden] { display: none !important; }
+    .wrap { width: min(var(--page-width), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .icon { display: inline-block; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; vertical-align: middle; }
+    .svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .mono { font-family: var(--mono); font-size: 10px; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; }
+    .skip-link { position: fixed; top: 10px; left: 10px; z-index: 100; padding: 12px 20px; background: var(--mint); color: var(--bg); transform: translateY(-160%); }
+    .skip-link:focus { transform: translateY(0); }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 48px; padding: 12px 23px; border: 1px solid var(--line-strong); border-radius: 100px; background: transparent; font-size: 13px; font-weight: 500; transition: background .2s, color .2s, transform .2s; }
+    .button:hover { background: #ffffff08; transform: translateY(-2px); }
+    .button-primary { background: var(--mint); color: #17251c; border-color: var(--mint); }
+    .button-primary:hover { background: #d0ebd7; }
+    .icon-button { display: inline-grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--line-strong); border-radius: 50%; background: transparent; transition: background .2s; }
+    .icon-button:hover { background: #ffffff0e; }
+
+    /* Navegação */
+    .site-header { position: sticky; top: 0; z-index: 30; height: var(--nav-height); background: #101512ee; border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 100%; }
+    .brand { display: flex; align-items: center; gap: 13px; flex-shrink: 0; }
+    .brand-mark { position: relative; width: 39px; height: 39px; color: var(--mint); }
+    .brand-mark .icon { width: 39px; height: 39px; stroke-width: 1; }
+    .brand-image { display: none; width: 116px; max-height: 42px; object-fit: contain; }
+    .brand[data-logo="loaded"] .brand-fallback { display: none; }
+    .brand[data-logo="loaded"] .brand-image { display: block; }
+    .brand-fallback { display: flex; align-items: center; gap: 12px; }
+    .brand-name { font-size: 24px; letter-spacing: -.07em; font-weight: 600; line-height: 1; }
+    .brand-name small { font: 400 9px var(--mono); letter-spacing: .03em; margin-left: 4px; }
+    .brand-sub { font: 400 9px var(--mono); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; border-left: 1px solid var(--line-strong); padding-left: 14px; max-width: 120px; line-height: 1.6; }
+    .nav-links { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 33px); }
+    .nav-links a { display: inline-flex; align-items: center; gap: 7px; padding: 12px 0; color: var(--soft); font-size: 11px; white-space: nowrap; transition: color .2s; }
+    .nav-links a:hover, .nav-links a[aria-current] { color: var(--text); }
+    .dot { width: 5px; height: 5px; background: var(--accent, var(--mint)); border-radius: 50%; flex-shrink: 0; }
+    [data-tech="01"], #\30 1 { --accent: var(--mint); }
+    [data-tech="02"], #\30 2 { --accent: var(--gold); }
+    [data-tech="03"], #\30 3 { --accent: var(--blue); }
+    [data-tech="04"], #\30 4 { --accent: var(--purple); }
+    .nav-cta { border: 0; border-bottom: 1px solid var(--line-strong); padding: 8px 0; font-size: 12px; white-space: nowrap; display: inline-flex; align-items: center; gap: 12px; }
+    .nav-cta .icon { width: 16px; height: 16px; }
+    .menu-toggle { display: none; }
+    .reading-progress { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--mint); transform: scaleX(0); transform-origin: left; opacity: .65; }
+
+    /* Entrada: composição editorial e terreno construído com pontos. */
+    .hero { position: relative; display: grid; grid-template-columns: 1fr 1.08fr; align-items: center; gap: 35px; min-height: 660px; padding-block: 70px 50px; }
+    .hero-copy { position: relative; z-index: 2; }
+    .eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 26px; color: var(--soft); font: 400 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .eyebrow::before { content: ''; width: 25px; height: 1px; background: var(--mint); }
+    .hero h1 { font: 400 clamp(62px, 6.7vw, 98px)/1.04 var(--serif); letter-spacing: -.055em; margin: 0 0 28px; }
+    .hero h1 em { color: var(--mint); font-weight: 400; letter-spacing: -.05em; }
+    .hero-description { max-width: 380px; color: var(--soft); font-size: 14px; line-height: 1.8; margin: 0 0 31px; }
+    .hero-actions { display: flex; align-items: center; gap: 21px; flex-wrap: wrap; }
+    .text-link { font-size: 12px; color: var(--soft); border-bottom: 1px solid var(--line-strong); padding-bottom: 4px; }
+    .text-link:hover { color: var(--text); }
+    .hero-stats { display: flex; gap: 33px; margin-top: 45px; }
+    .hero-stat { display: flex; align-items: center; gap: 12px; }
+    .hero-stat + .hero-stat { border-left: 1px solid var(--line-strong); padding-left: 33px; }
+    .hero-stat b { font: 400 35px/1 var(--serif); letter-spacing: -.04em; }
+    .hero-stat span { font-size: 10px; color: var(--muted); line-height: 1.55; max-width: 90px; }
+    .hero-scene { position: relative; align-self: stretch; min-height: 500px; border: 1px solid #d0e7d614; border-radius: 5px; overflow: hidden; background: radial-gradient(ellipse at 55% 42%, #bddbc708, transparent 63%); }
+    .hero-scene::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(#bedac906 1px, transparent 1px), linear-gradient(90deg, #bedac906 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse, #000, transparent 85%); }
+    .scene-top { position: absolute; inset: 22px 22px auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; z-index: 2; pointer-events: none; }
+    .scene-label { color: var(--mint); font: 400 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .scene-label small { display: block; margin-top: 6px; font-size: 9px; letter-spacing: 0; text-transform: none; color: var(--muted); }
+    .scene-chip { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font: 400 9px var(--mono); white-space: nowrap; }
+    .scene-chip .dot { background: var(--mint); }
+    #terrain { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
+    #terrain:active { cursor: grabbing; }
+    .scene-fallback { position: absolute; width: 100%; height: 100%; inset: 0; opacity: .8; }
+    .scene-bottom { position: absolute; inset: auto 22px 21px; display: flex; align-items: center; justify-content: space-between; gap: 14px; z-index: 2; }
+    .scene-hint { color: var(--muted); font: 400 9px var(--mono); display: flex; align-items: center; gap: 7px; }
+    .scene-hint .icon { width: 13px; height: 13px; }
+    .scene-controls { display: flex; align-items: center; gap: 6px; }
+    .scene-mode { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 30px; background: #101512cc; }
+    .scene-mode button { padding: 7px 12px; font: 400 9px var(--mono); background: transparent; border: none; border-radius: 30px; color: var(--muted); }
+    .scene-mode button[aria-pressed="true"] { background: var(--mint); color: #15251b; }
+    .scene-controls .icon-button { width: 32px; height: 32px; background: #101512cc; }
+    .scene-controls .icon { width: 12px; height: 12px; }
+    .scene-corner { position: absolute; width: 11px; height: 11px; border-color: #bddbc75c; border-style: solid; pointer-events: none; }
+    .scene-corner.tl { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+    .scene-corner.tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+    .scene-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+    .scene-corner.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+    .hero-footnote { display: flex; align-items: center; justify-content: space-between; padding-block: 15px 30px; color: var(--muted); border-bottom: 1px solid var(--line); font-size: 11px; }
+    .hero-footnote a { display: inline-flex; align-items: center; gap: 9px; }
+    .hero-footnote .icon { width: 14px; height: 14px; }
+    .hero-footnote .featured-label { font: 400 9px var(--mono); letter-spacing: .08em; color: var(--mint); text-transform: uppercase; margin-right: 7px; }
+
+    /* Índice de tecnologias */
+    .tech-index { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); border-bottom: 1px solid var(--line); }
+    .tech-tile { position: relative; padding: 27px 24px 29px; transition: background .25s; }
+    .tech-tile:first-child { padding-left: 0; }
+    .tech-tile:last-child { padding-right: 0; }
+    .tech-tile + .tech-tile { border-left: 1px solid var(--line); }
+    .tech-tile:hover { background: #ffffff03; }
+    .tile-top { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font: 400 9px var(--mono); }
+    .tile-top .icon { color: var(--accent); width: 22px; height: 22px; }
+    .tech-tile h2 { font: 400 clamp(18px, 1.8vw, 24px) var(--serif); margin: 18px 0 7px; }
+    .tile-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: 11px; }
+    .tile-bottom .icon { width: 15px; height: 15px; transition: transform .2s; }
+    .tech-tile:hover .tile-bottom .icon { color: var(--accent); transform: translate(2px, -2px); }
+    .soon-label { color: var(--purple); }
+
+    /* Catálogo, pesquisa e filtros */
+    .catalog { padding-top: 96px; scroll-margin-top: 110px; }
+    .catalog-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 32px; }
+    .catalog-head .eyebrow { margin-bottom: 19px; }
+    .catalog-head h2 { font: 400 clamp(38px, 4.1vw, 59px)/1.08 var(--serif); letter-spacing: -.045em; margin: 0; }
+    .catalog-head h2 em { color: var(--mint); font-weight: 400; }
+    .catalog-summary { max-width: 270px; color: var(--soft); font-size: 12px; padding-bottom: 5px; }
+    .catalog-summary p { margin: 0; }
+    .catalog-toolbar { position: sticky; top: calc(var(--nav-height) - 1px); z-index: 20; padding: 16px 0 13px; background: #101512f5; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .toolbar-top { display: flex; align-items: center; gap: 12px; }
+    .search-box { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 0 15px; height: 48px; border: 1px solid var(--line-strong); border-radius: 4px; background: #ffffff03; }
+    .search-box:focus-within { border-color: var(--mint); }
+    .search-box > .icon { color: var(--muted); width: 17px; height: 17px; }
+    .search-box input { width: 100%; min-width: 0; border: 0; color: var(--text); background: transparent; font-size: 12px; outline: none; padding: 10px 0; }
+    .search-box input::placeholder { color: var(--muted); }
+    .search-box input::-webkit-search-cancel-button { display: none; }
+    .search-clear { display: grid; place-items: center; flex-shrink: 0; width: 30px; height: 30px; padding: 0; color: var(--soft); border: 0; background: transparent; }
+    .search-clear .icon { width: 14px; height: 14px; }
+    kbd { color: var(--muted); border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 6px; font: 400 10px var(--mono); }
+    .sort-control { position: relative; display: flex; align-items: center; gap: 9px; height: 48px; border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 12px; }
+    .sort-control > .icon { width: 16px; height: 16px; color: var(--muted); }
+    .sort-control select { max-width: 170px; color: var(--soft); background: var(--bg); border: 0; font-size: 11px; padding: 6px 0; }
+    .view-control { display: flex; border: 1px solid var(--line-strong); border-radius: 4px; padding: 4px; gap: 3px; }
+    .view-control button { width: 37px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 2px; color: var(--muted); background: transparent; }
+    .view-control button[aria-pressed="true"] { color: var(--mint); background: #bddbc714; }
+    .view-control .icon { width: 17px; height: 17px; }
+    .toolbar-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 14px; }
+    .filters { display: flex; align-items: center; gap: 7px; min-width: 0; overflow-x: auto; padding: 4px 2px; scrollbar-width: thin; }
+    .filter { border: 1px solid transparent; border-radius: 100px; padding: 7px 11px; background: transparent; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; color: var(--soft); font-size: 11px; }
+    .filter[aria-pressed="true"] { border-color: var(--line-strong); color: var(--text); background: #ffffff08; }
+    .filter:hover { color: var(--text); }
+    .filter small { font: 400 9px var(--mono); color: var(--muted); }
+    .results-count { flex-shrink: 0; color: var(--muted); font: 400 9px var(--mono); }
+    .technology { padding-top: 40px; margin-bottom: 47px; scroll-margin-top: 235px; }
+    .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 22px; }
+    .section-heading { display: flex; gap: 14px; align-items: center; }
+    .section-number { color: var(--accent); font: 400 10px var(--mono); border: 1px solid var(--line-strong); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; }
+    .section-head h3 { margin: 0; font: 400 27px var(--serif); letter-spacing: -.025em; }
+    .section-description { max-width: 390px; margin: 0; color: var(--muted); font-size: 11px; text-align: right; }
+    .section-count { color: var(--muted); font: 400 10px var(--mono); margin-left: 3px; }
+    .models-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
+    .model-card { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; transition: border-color .25s, transform .25s, background .25s; }
+    .model-card:hover { border-color: #bddbc74d; transform: translateY(-4px); background: var(--panel-hover); }
+    .card-link { display: block; height: 100%; }
+    .card-link:focus-visible { outline-offset: -3px; }
+    .card-media { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #0b100d; }
+    .card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.6,.2,1); }
+    .model-card:hover .card-media img { transform: scale(1.045); }
+    .card-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #0002, transparent 40%, #0003); pointer-events: none; }
+    .thumb-fallback { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 9px; color: var(--accent); background: radial-gradient(ellipse at var(--fallback-x, 50%) 70%, #bddbc715, transparent 65%), #101712; }
+    .thumb-fallback svg { position: absolute; inset: -15% -5%; width: 110%; height: 130%; opacity: .14; stroke: var(--accent); fill: none; stroke-width: 1; transform: rotate(var(--fallback-angle, 0deg)); }
+    .thumb-fallback .icon { position: static; width: 30px; height: 30px; opacity: .6; stroke-width: 1; transform: none; }
+    .thumb-fallback span { z-index: 1; color: var(--muted); font: 400 9px var(--mono); letter-spacing: .025em; }
+    .media-badge { position: absolute; z-index: 2; top: 13px; left: 13px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #ffffff26; border-radius: 3px; background: #0b100da6; color: #eeeee6; padding: 5px 8px; font: 400 9px var(--mono); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .media-badge .icon { width: 12px; height: 12px; }
+    .card-hover { position: absolute; z-index: 3; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 19px; opacity: 0; background: linear-gradient(180deg, transparent 35%, #09110dd4); transition: opacity .25s; }
+    .card-hover span:first-child { font: 400 10px var(--mono); letter-spacing: .03em; }
+    .card-hover > .icon { width: 24px; height: 24px; }
+    .model-card:hover .card-hover, .card-link:focus-visible .card-hover { opacity: 1; }
+    .card-info { padding: 20px 20px 17px; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 400 9px var(--mono); color: var(--accent); }
+    .card-meta .card-number { color: var(--muted); font-size: 8px; }
+    .card-info h4 { font-size: 16px; line-height: 1.45; font-weight: 500; letter-spacing: -.02em; min-height: 47px; margin: 12px 0 18px; }
+    .card-bottom { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 12px; color: var(--muted); font-size: 10px; }
+    .card-bottom .icon { width: 14px; height: 14px; color: var(--soft); transition: transform .25s; }
+    .model-card:hover .card-bottom .icon { transform: translate(2px, -2px); color: var(--mint); }
+    .catalog[data-view="list"] .models-grid { grid-template-columns: 1fr; gap: 12px; }
+    .catalog[data-view="list"] .card-link { display: grid; grid-template-columns: 210px 1fr; }
+    .catalog[data-view="list"] .card-media { aspect-ratio: auto; min-height: 150px; }
+    .catalog[data-view="list"] .card-info { display: flex; flex-direction: column; justify-content: center; }
+    .catalog[data-view="list"] .card-info h4 { min-height: auto; margin: 10px 0 14px; }
+    .catalog[data-view="list"] .card-hover { align-items: center; justify-content: center; }
+    .catalog[data-view="list"] .card-hover span { display: none; }
+    .empty-state { text-align: center; border: 1px solid var(--line); border-radius: 5px; padding: 65px 20px; margin: 35px 0 65px; }
+    .empty-state > .icon { width: 30px; height: 30px; color: var(--muted); }
+    .empty-state h3 { font: 400 30px var(--serif); margin: 16px 0 8px; }
+    .empty-state p { color: var(--soft); font-size: 12px; margin: 0 0 23px; }
+
+    /* Hiperespectral: antecipação sem inventar resultados científicos. */
+    .coming-soon { position: relative; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; min-height: 270px; padding: 43px; border: 1px solid #c5b4df26; border-radius: 5px; overflow: hidden; background: linear-gradient(115deg, #201f291f, #101512); }
+    .coming-soon .mono { color: var(--purple); display: flex; align-items: center; gap: 7px; }
+    .coming-soon h4 { font: 400 clamp(28px, 3vw, 43px)/1.1 var(--serif); letter-spacing: -.03em; margin: 20px 0 15px; }
+    .coming-soon h4 em { font-weight: 400; color: var(--purple); }
+    .coming-soon p { color: var(--muted); font-size: 12px; max-width: 410px; margin: 0; }
+    .spectral-art { position: relative; height: 170px; display: flex; gap: 5px; justify-content: center; align-items: center; transform: rotate(-12deg); opacity: .85; }
+    .spectral-art::before { content: ''; position: absolute; inset: 10%; background: #c5b4df18; filter: blur(35px); }
+    .spectral-art i { display: block; position: relative; width: 8px; height: var(--h); border-radius: 30px; background: linear-gradient(180deg, #c5b4df08, var(--band), #c5b4df08); }
+
+    /* Guia e rodapé */
+    .guide { display: grid; grid-template-columns: 1.1fr repeat(3, 1fr); gap: 33px; padding-block: 51px 62px; border-top: 1px solid var(--line); margin-top: 90px; scroll-margin-top: 115px; }
+    .guide h2 { font: 400 29px/1.15 var(--serif); letter-spacing: -.03em; margin: 0 0 10px; }
+    .guide-intro p { color: var(--muted); font-size: 11px; margin: 0; }
+    .guide-step .mono { color: var(--mint); }
+    .guide-step h3 { margin: 12px 0 7px; font-size: 13px; font-weight: 500; }
+    .guide-step p { color: var(--muted); font-size: 11px; margin: 0; }
+    .site-footer { border-top: 1px solid var(--line); padding: 28px 0 35px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+    .footer-name { font-size: 13px; font-weight: 500; letter-spacing: -.02em; }
+    .footer-name span { color: var(--muted); font-size: 10px; margin-left: 14px; font-weight: 400; }
+    .footer-note { color: var(--muted); font: 400 9px var(--mono); }
+    .back-top { display: inline-flex; align-items: center; gap: 9px; font-size: 11px; color: var(--soft); }
+    .back-top .icon { width: 14px; height: 14px; }
+
+    /* Um único visualizador, criado apenas depois de escolher um modelo. */
+    .viewer-dialog { padding: 0; width: min(1450px, calc(100% - 48px)); max-width: none; height: min(920px, calc(100dvh - 48px)); max-height: none; background: #101512; color: var(--text); border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+    .viewer-dialog[open] { display: flex; flex-direction: column; }
+    .viewer-dialog::backdrop { background: #030704df; -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px); }
+    .viewer-dialog:fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+    .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 17px 21px; border-bottom: 1px solid var(--line); }
+    .viewer-head .mono { color: var(--mint); font-size: 9px; margin-bottom: 4px; display: block; }
+    .viewer-head h2 { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.4; }
+    .viewer-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .viewer-actions .icon-button { width: 36px; height: 36px; }
+    .viewer-actions .icon { width: 16px; height: 16px; }
+    .viewer-stage { position: relative; flex: 1; min-height: 0; background: #050806; }
+    .viewer-stage iframe { width: 100%; height: 100%; display: block; border: 0; position: relative; z-index: 1; background: #050806; }
+    .viewer-loading { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 15px; background: #050806; text-align: center; padding: 20px; }
+    .spinner { width: 27px; height: 27px; border: 1px solid #bddbc726; border-top-color: var(--mint); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .viewer-loading p { margin: 0; color: var(--soft); font: 400 11px var(--mono); }
+    .viewer-slow { font-size: 12px; color: var(--soft); }
+    .viewer-slow a { display: inline-block; margin-top: 10px; color: var(--mint); border-bottom: 1px solid currentColor; }
+    .viewer-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 20px; border-top: 1px solid var(--line); }
+    .viewer-pager { display: flex; align-items: center; gap: 14px; }
+    .viewer-pager .icon-button { width: 32px; height: 32px; }
+    .viewer-position { color: var(--muted); font: 400 10px var(--mono); }
+    .viewer-external { color: var(--soft); display: inline-flex; align-items: center; gap: 8px; font-size: 11px; }
+    .viewer-external .icon { width: 14px; height: 14px; }
+    .viewer-tip { color: var(--muted); font-size: 10px; }
+    .noscript-notice { border: 1px solid var(--line); padding: 14px 18px; color: var(--soft); font-size: 12px; margin-bottom: 20px; }
+    .js .reveal { opacity: 0; transform: translateY(15px); transition: opacity .6s, transform .6s; }
+    .js .reveal.is-visible { opacity: 1; transform: none; }
+
+    @media (min-width: 1600px) { .hero { min-height: 725px; } .hero-scene { min-height: 565px; } }
+    @media (max-width: 1150px) {
+      .brand-sub { display: none; }
+      .nav-links { gap: 18px; }
+      .hero { gap: 20px; min-height: 615px; padding-block: 55px 35px; }
+      .hero h1 { font-size: clamp(61px, 7vw, 88px); }
+      .hero-scene { min-height: 470px; }
+      .scene-hint { display: none; }
+      .scene-bottom { justify-content: flex-end; }
+      .card-info { padding: 17px; }
+      .guide { gap: 23px; }
+    }
+    @media (max-width: 900px) {
+      :root { --nav-height: 74px; }
+      .nav-cta { display: none; }
+      .hero { grid-template-columns: 1fr 1fr; }
+      .hero h1 { font-size: clamp(52px, 7.5vw, 70px); }
+      .hero-description { font-size: 13px; }
+      .hero-stats { gap: 20px; }
+      .hero-stat + .hero-stat { padding-left: 20px; }
+      .hero-stat b { font-size: 30px; }
+      .scene-top { inset: 18px 18px auto; }
+      .scene-chip { display: none; }
+      .models-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+      .tech-tile { padding-inline: 16px; }
+      .tech-tile h2 { font-size: 20px; }
+      .tech-tile .tile-bottom { font-size: 10px; }
+      .catalog { padding-top: 70px; }
+      .catalog-summary { max-width: 210px; }
+      .toolbar-bottom { flex-wrap: wrap; gap: 7px; }
+      .filters { width: 100%; }
+      .results-count { padding: 0 3px 4px; }
+      .section-description { max-width: 260px; }
+      .technology { scroll-margin-top: 265px; }
+      .guide { grid-template-columns: repeat(3,1fr); }
+      .guide-intro { grid-column: 1/-1; }
+      .viewer-tip { display: none; }
+    }
+    @media (max-width: 700px) {
+      .brand-sub { display: block; max-width: 110px; font-size: 8px; }
+      .brand-name { font-size: 22px; }
+      .brand-mark, .brand-mark .icon { width: 32px; height: 32px; }
+      .menu-toggle { display: inline-grid; width: 36px; height: 36px; }
+      .nav-links { display: none; position: absolute; top: var(--nav-height); left: 0; width: 100%; padding: 16px var(--gutter) 23px; background: #101512; border-bottom: 1px solid var(--line-strong); }
+      .nav-links.is-open { display: grid; grid-template-columns: repeat(2,1fr); gap: 3px 20px; }
+      .nav-links a { padding: 11px 0; font-size: 12px; }
+      .hero { grid-template-columns: 1fr; gap: 35px; padding-top: 45px; padding-bottom: 22px; }
+      .hero h1 { font-size: clamp(59px, 10.5vw, 82px); }
+      .hero-description { max-width: 450px; }
+      .hero .eyebrow { font-size: 9px; margin-bottom: 23px; }
+      .hero-stats { margin-top: 32px; }
+      .hero-scene { min-height: 380px; }
+      .scene-chip { display: inline-flex; }
+      .scene-hint { display: flex; }
+      .scene-bottom { justify-content: space-between; }
+      .hero-footnote { font-size: 10px; padding-bottom: 22px; }
+      .hero-footnote > span { display: none; }
+      .tech-index { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .tech-tile { padding: 22px 18px !important; }
+      .tech-tile:nth-child(odd) { padding-left: 0 !important; border-left: 0; }
+      .tech-tile:nth-child(even) { padding-right: 0 !important; }
+      .tech-tile:nth-child(n+3) { border-top: 1px solid var(--line); }
+      .tech-tile h2 { margin-top: 12px; font-size: 22px; }
+      .catalog-head { align-items: flex-start; flex-direction: column; gap: 18px; }
+      .catalog-head h2 { font-size: clamp(40px, 8vw, 56px); }
+      .catalog-summary { max-width: 100%; padding: 0; }
+      .catalog-summary p { max-width: 380px; }
+      .toolbar-top { flex-wrap: wrap; gap: 10px; }
+      .search-box { flex-basis: 100%; }
+      .search-box kbd { display: none; }
+      .sort-control { flex: 1; height: 42px; }
+      .sort-control select { width: 100%; max-width: none; }
+      .view-control { height: 42px; }
+      .view-control button { height: 32px; }
+      .catalog-toolbar { padding-top: 12px; }
+      .toolbar-bottom { margin-top: 8px; }
+      .technology { scroll-margin-top: 318px; }
+      .section-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .section-description { text-align: left; max-width: 100%; padding-left: 46px; }
+      .coming-soon { grid-template-columns: 1fr; padding: 30px; gap: 15px; }
+      .spectral-art { height: 110px; }
+      .spectral-art i { height: calc(var(--h) * .7); width: 7px; }
+      .guide { grid-template-columns: 1fr; gap: 25px; margin-top: 60px; padding-block: 38px; }
+      .guide-intro { grid-column: auto; margin-bottom: 5px; }
+      .guide-step { display: grid; grid-template-columns: 30px 1fr; gap: 1px 14px; }
+      .guide-step .mono { grid-row: 1/3; padding-top: 4px; }
+      .guide-step h3 { margin: 0 0 5px; }
+      .footer-inner { flex-wrap: wrap; gap: 18px; }
+      .footer-note { display: none; }
+      .footer-name span { display: block; margin: 4px 0 0; }
+      .viewer-dialog { width: calc(100% - 16px); height: calc(100dvh - 16px); border-radius: 5px; }
+      .viewer-head { padding: 14px; gap: 12px; }
+      .viewer-head h2 { font-size: 13px; }
+      .viewer-head .mono { font-size: 8px; }
+      .viewer-foot { padding: 12px; gap: 8px; }
+      .viewer-external { font-size: 10px; }
+    }
+    @media (max-width: 500px) {
+      .models-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: clamp(50px, 12.2vw, 64px); }
+      .hero-scene { min-height: 340px; }
+      .scene-hint { display: none; }
+      .scene-bottom { justify-content: flex-end; }
+      .hero-actions { gap: 17px; }
+      .hero-actions .button { font-size: 12px; padding-inline: 19px; }
+      .hero-stat span { font-size: 9px; }
+      .hero-stat b { font-size: 31px; }
+      .tech-tile h2 { font-size: 21px; }
+      .card-info h4 { min-height: 0; }
+      .catalog[data-view="list"] .card-link { grid-template-columns: 102px 1fr; }
+      .catalog[data-view="list"] .card-media { min-height: 150px; }
+      .catalog[data-view="list"] .card-info { padding: 13px; }
+      .catalog[data-view="list"] .card-info h4 { font-size: 13px; }
+      .catalog[data-view="list"] .card-meta { font-size: 8px; }
+      .catalog[data-view="list"] .media-badge { top: 8px; left: 8px; padding: 4px 6px; }
+      .catalog[data-view="list"] .thumb-fallback span, .catalog[data-view="list"] .card-number { display: none; }
+      .viewer-pager { gap: 9px; }
+      .viewer-position { font-size: 9px; }
+    }
+    @media (max-width: 380px) { .brand-sub { display: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .js .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip-link" href="#atlas">Saltar para os modelos</a>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H4m6-6-6 6 6 6"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V4m-6 6 6-6 6 6"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+      <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 5h11M9 12h11M9 19h11M4 5h1M4 12h1M4 19h1"/></symbol>
+      <symbol id="i-sort" viewBox="0 0 24 24"><path d="M8 4v16m-4-4 4 4 4-4M14 5h6m-6 6h4m-4 6h2"/></symbol>
+      <symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm0 10v8M3 8l9 5 9-5M7.5 5.5l9 5"/></symbol>
+      <symbol id="i-aerial" viewBox="0 0 24 24"><path d="m3 14 9 5 9-5M3 18l9 5 9-5M4 10l8-4 8 4-8 4-8-4ZM12 1v5"/></symbol>
+      <symbol id="i-scan" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M3 12h18M12 7v10"/></symbol>
+      <symbol id="i-spectrum" viewBox="0 0 24 24"><path d="M4 17V7m4 14V3m4 16V5m4 11V8m4 12V4"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m3 7 9-5 9 5-9 5-9-5Zm0 5 9 5 9-5M3 17l9 5 9-5"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8V4Z"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+      <symbol id="i-orbit" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-brand" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="8" ry="17" transform="rotate(35 20 20)"/><path d="M4 24c8-6 18-7 31-7M6 12c9 9 17 15 29 15"/><circle cx="29" cy="8" r="2" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="contours" viewBox="0 0 400 250"><path d="M-20 145c47-79 90-56 143-80s91-16 114 26 92 34 188-1M-20 163c50-76 99-48 151-77s85-7 106 31 95 34 188-4M-20 181c65-76 109-49 158-72s73-1 94 35 98 34 193-14M-20 200c66-73 124-38 162-62s69-4 89 33 108 25 194-24M-20 218c70-67 125-28 174-47s60-4 80 31 109 14 191-32M-20 127c35-77 88-64 135-86s104-9 126 20 89 37 184 2M-20 106c40-68 86-67 128-88s114-12 141 19 95 31 176 2M-20 239c88-61 143-24 177-43s58-6 77 33 111 5 191-35M-20 87c45-67 70-76 129-87s108-2 143 17 80 16 173-3"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="site-header">
+    <div class="nav-inner wrap">
+      <a class="brand" href="#top" aria-label="GEO-DS LAB — Universidade de Évora, início">
+        <img class="brand-image" src="images/GEODS.png" alt="" width="116" height="42">
+        <span class="brand-fallback" aria-hidden="true"><span class="brand-mark"><svg class="icon"><use href="#i-brand"/></svg></span><span class="brand-name">GEO-DS<small>LAB</small></span></span>
+        <span class="brand-sub" aria-hidden="true">Universidade<br>de Évora</span>
+      </a>
+      <nav class="nav-links" id="main-nav" aria-label="Tecnologias de aquisição">
+        <a href="#01" data-tech="01" data-tech-nav><span class="dot"></span>LiDAR Aéreo</a>
+        <a href="#02" data-tech="02" data-tech-nav><span class="dot"></span>LiDAR Terrestre</a>
+        <a href="#03" data-tech="03" data-tech-nav><span class="dot"></span>Multiespectral</a>
+        <a href="#04" data-tech="04" data-tech-nav><span class="dot"></span>Hiperespectral</a>
+      </nav>
+      <a class="nav-cta" href="#atlas">Explorar atlas<svg class="icon"><use href="#i-arrow"/></svg></a>
+      <button class="menu-toggle icon-button" type="button" aria-label="Abrir menu" aria-controls="main-nav" aria-expanded="false" hidden><svg class="icon"><use href="#i-menu"/></svg></button>
+    </div>
+    <div class="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Atlas digital do território</p>
+        <h1 id="hero-title">Ver além<br>da <em>superfície.</em></h1>
+        <p class="hero-description">Do património à paisagem, cada ponto revela uma história. Explora o território em novas dimensões através dos modelos digitais do GEO-DS LAB.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#atlas">Explorar os modelos<svg class="icon"><use href="#i-arrow"/></svg></a>
+          <a class="text-link" href="#como-explorar">Como explorar</a>
+        </div>
+        <div class="hero-stats" aria-label="O atlas em números">
+          <div class="hero-stat"><b data-total-models>42</b><span>modelos digitais<br>para explorar</span></div>
+          <div class="hero-stat"><b>04</b><span>tecnologias<br>de aquisição</span></div>
+        </div>
+      </div>
+      <div class="hero-scene">
+        <svg class="scene-fallback" viewBox="0 0 650 520" aria-hidden="true"><g fill="#405a48"><circle cx="151.4" cy="193.7" r="1.2"/><circle cx="161.3" cy="188.1" r="1.2"/><circle cx="171.2" cy="181.6" r="1.2"/><circle cx="181.1" cy="174.5" r="1.2"/><circle cx="191.0" cy="167.7" r="1.2"/><circle cx="200.9" cy="161.7" r="1.2"/><circle cx="210.8" cy="156.8" r="1.2"/><circle cx="220.7" cy="153.1" r="1.2"/><circle cx="230.6" cy="150.3" r="1.2"/><circle cx="240.5" cy="147.9" r="1.2"/><circle cx="250.4" cy="145.2" r="1.2"/><circle cx="128.8" cy="208.5" r="1.2"/><circle cx="138.7" cy="205.6" r="1.2"/><circle cx="148.6" cy="201.5" r="1.2"/><circle cx="158.5" cy="196.1" r="1.2"/><circle cx="168.4" cy="189.8" r="1.2"/><circle cx="178.3" cy="183.0" r="1.2"/><circle cx="188.2" cy="176.4" r="1.2"/><circle cx="198.1" cy="170.5" r="1.2"/><circle cx="208.0" cy="165.9" r="1.2"/><circle cx="217.9" cy="162.6" r="1.2"/><circle cx="227.8" cy="160.4" r="1.2"/><circle cx="237.6" cy="158.8" r="1.2"/><circle cx="247.5" cy="157.2" r="1.2"/><circle cx="257.4" cy="154.8" r="1.2"/><circle cx="267.3" cy="151.0" r="1.2"/><circle cx="277.2" cy="145.7" r="1.2"/><circle cx="287.1" cy="138.8" r="1.2"/><circle cx="297.0" cy="130.8" r="1.2"/><circle cx="106.2" cy="226.2" r="1.2"/><circle cx="116.1" cy="223.6" r="1.2"/><circle cx="126.0" cy="220.8" r="1.2"/><circle cx="135.9" cy="217.4" r="1.2"/><circle cx="145.8" cy="212.8" r="1.2"/><circle cx="155.7" cy="207.0" r="1.2"/><circle cx="165.6" cy="200.1" r="1.2"/><circle cx="175.5" cy="192.5" r="1.2"/><circle cx="185.4" cy="185.1" r="1.2"/><circle cx="195.2" cy="178.4" r="1.2"/><circle cx="205.1" cy="173.0" r="1.2"/><circle cx="215.0" cy="169.1" r="1.2"/><circle cx="224.9" cy="166.8" r="1.2"/><circle cx="234.8" cy="165.4" r="1.2"/><circle cx="244.7" cy="164.5" r="1.2"/><circle cx="254.6" cy="163.2" r="1.2"/><circle cx="264.5" cy="160.9" r="1.2"/><circle cx="274.4" cy="157.1" r="1.2"/><circle cx="284.3" cy="151.6" r="1.2"/><circle cx="294.2" cy="144.7" r="1.2"/><circle cx="304.1" cy="136.9" r="1.2"/><circle cx="314.0" cy="128.9" r="1.2"/><circle cx="323.9" cy="121.4" r="1.2"/><circle cx="93.5" cy="242.3" r="1.2"/><circle cx="103.4" cy="239.5" r="1.2"/><circle cx="113.3" cy="237.2" r="1.2"/><circle cx="123.2" cy="234.9" r="1.2"/><circle cx="133.1" cy="231.9" r="1.2"/><circle cx="143.0" cy="227.6" r="1.2"/><circle cx="152.8" cy="221.8" r="1.2"/><circle cx="162.7" cy="214.6" r="1.2"/><circle cx="172.6" cy="206.4" r="1.2"/><circle cx="182.5" cy="197.9" r="1.2"/><circle cx="192.4" cy="189.9" r="1.2"/><circle cx="202.3" cy="182.9" r="1.2"/><circle cx="212.2" cy="177.5" r="1.2"/><circle cx="222.1" cy="173.8" r="1.2"/><circle cx="232.0" cy="171.5" r="1.2"/><circle cx="241.9" cy="170.1" r="1.2"/><circle cx="251.8" cy="168.8" r="1.2"/><circle cx="261.7" cy="166.9" r="1.2"/><circle cx="271.6" cy="164.0" r="1.2"/><circle cx="281.5" cy="159.5" r="1.2"/><circle cx="291.3" cy="153.8" r="1.2"/><circle cx="301.2" cy="147.0" r="1.2"/><circle cx="311.1" cy="139.9" r="1.2"/><circle cx="321.0" cy="133.1" r="1.2"/><circle cx="330.9" cy="127.2" r="1.2"/><circle cx="340.8" cy="122.5" r="1.2"/><circle cx="350.7" cy="119.1" r="1.2"/><circle cx="90.7" cy="251.0" r="1.2"/><circle cx="100.6" cy="248.7" r="1.2"/><circle cx="110.4" cy="247.2" r="1.2"/><circle cx="120.3" cy="245.9" r="1.2"/><circle cx="130.2" cy="244.1" r="1.2"/><circle cx="140.1" cy="241.2" r="1.2"/><circle cx="150.0" cy="236.6" r="1.2"/><circle cx="159.9" cy="230.3" r="1.2"/><circle cx="169.8" cy="222.6" r="1.2"/><circle cx="179.7" cy="214.0" r="1.2"/><circle cx="189.6" cy="205.4" r="1.2"/><circle cx="199.5" cy="197.3" r="1.2"/><circle cx="209.4" cy="190.5" r="1.2"/><circle cx="219.3" cy="185.2" r="1.2"/><circle cx="229.2" cy="181.3" r="1.2"/><circle cx="239.1" cy="178.6" r="1.2"/><circle cx="248.9" cy="176.3" r="1.2"/><circle cx="258.8" cy="173.8" r="1.2"/><circle cx="268.7" cy="170.5" r="1.2"/><circle cx="278.6" cy="165.9" r="1.2"/><circle cx="288.5" cy="160.1" r="1.2"/><circle cx="298.4" cy="153.5" r="1.2"/><circle cx="308.3" cy="146.5" r="1.2"/><circle cx="318.2" cy="140.0" r="1.2"/><circle cx="328.1" cy="134.4" r="1.2"/><circle cx="338.0" cy="130.2" r="1.2"/><circle cx="347.9" cy="127.5" r="1.2"/><circle cx="357.8" cy="126.0" r="1.2"/><circle cx="367.7" cy="125.1" r="1.2"/><circle cx="87.8" cy="257.7" r="1.2"/><circle cx="97.7" cy="254.8" r="1.2"/><circle cx="107.6" cy="253.3" r="1.2"/><circle cx="117.5" cy="252.5" r="1.2"/><circle cx="127.4" cy="251.7" r="1.2"/><circle cx="137.3" cy="250.0" r="1.2"/><circle cx="147.2" cy="247.0" r="1.2"/><circle cx="157.1" cy="242.4" r="1.2"/><circle cx="167.0" cy="236.1" r="1.2"/><circle cx="176.9" cy="228.6" r="1.2"/><circle cx="186.8" cy="220.5" r="1.2"/><circle cx="196.6" cy="212.6" r="1.2"/><circle cx="206.5" cy="205.5" r="1.2"/><circle cx="216.4" cy="199.5" r="1.2"/><circle cx="226.3" cy="194.9" r="1.2"/><circle cx="236.2" cy="191.3" r="1.2"/><circle cx="246.1" cy="188.1" r="1.2"/><circle cx="256.0" cy="184.9" r="1.2"/><circle cx="265.9" cy="180.8" r="1.2"/><circle cx="275.8" cy="175.4" r="1.2"/><circle cx="285.7" cy="168.8" r="1.2"/><circle cx="295.6" cy="161.2" r="1.2"/><circle cx="305.5" cy="153.1" r="1.2"/><circle cx="315.4" cy="145.5" r="1.2"/><circle cx="345.0" cy="131.2" r="1.2"/><circle cx="354.9" cy="130.1" r="1.2"/><circle cx="364.8" cy="130.1" r="1.2"/><circle cx="374.7" cy="130.6" r="1.2"/><circle cx="384.6" cy="130.7" r="1.2"/><circle cx="85.0" cy="267.1" r="1.2"/><circle cx="94.9" cy="262.7" r="1.2"/><circle cx="104.8" cy="259.9" r="1.2"/><circle cx="114.7" cy="258.3" r="1.2"/><circle cx="124.6" cy="257.2" r="1.2"/><circle cx="134.5" cy="255.8" r="1.2"/><circle cx="144.4" cy="253.4" r="1.2"/><circle cx="154.2" cy="249.8" r="1.2"/><circle cx="164.1" cy="244.7" r="1.2"/><circle cx="174.0" cy="238.3" r="1.2"/><circle cx="183.9" cy="231.2" r="1.2"/><circle cx="193.8" cy="224.1" r="1.2"/><circle cx="203.7" cy="217.5" r="1.2"/><circle cx="213.6" cy="211.9" r="1.2"/><circle cx="223.5" cy="207.5" r="1.2"/><circle cx="233.4" cy="204.1" r="1.2"/><circle cx="243.3" cy="201.2" r="1.2"/><circle cx="253.2" cy="198.1" r="1.2"/><circle cx="263.1" cy="194.2" r="1.2"/><circle cx="273.0" cy="188.8" r="1.2"/><circle cx="282.9" cy="181.8" r="1.2"/><circle cx="292.7" cy="173.2" r="1.2"/><circle cx="302.6" cy="163.8" r="1.2"/><circle cx="362.0" cy="132.3" r="1.2"/><circle cx="371.9" cy="133.2" r="1.2"/><circle cx="381.8" cy="134.2" r="1.2"/><circle cx="391.7" cy="134.6" r="1.2"/><circle cx="401.6" cy="133.5" r="1.2"/><circle cx="82.2" cy="281.3" r="1.2"/><circle cx="92.1" cy="275.3" r="1.2"/><circle cx="102.0" cy="270.9" r="1.2"/><circle cx="111.8" cy="267.8" r="1.2"/><circle cx="121.7" cy="265.5" r="1.2"/><circle cx="131.6" cy="263.2" r="1.2"/><circle cx="141.5" cy="260.4" r="1.2"/><circle cx="151.4" cy="256.5" r="1.2"/><circle cx="161.3" cy="251.4" r="1.2"/><circle cx="171.2" cy="245.1" r="1.2"/><circle cx="181.1" cy="238.2" r="1.2"/><circle cx="191.0" cy="231.1" r="1.2"/><circle cx="200.9" cy="224.7" r="1.2"/><circle cx="210.8" cy="219.3" r="1.2"/><circle cx="220.7" cy="215.3" r="1.2"/><circle cx="230.6" cy="212.5" r="1.2"/><circle cx="240.5" cy="210.4" r="1.2"/><circle cx="250.3" cy="208.5" r="1.2"/><circle cx="260.2" cy="205.8" r="1.2"/><circle cx="270.1" cy="201.7" r="1.2"/><circle cx="280.0" cy="195.5" r="1.2"/><circle cx="289.9" cy="187.4" r="1.2"/><circle cx="299.8" cy="177.7" r="1.2"/><circle cx="309.7" cy="167.3" r="1.2"/><circle cx="378.9" cy="137.4" r="1.2"/><circle cx="388.8" cy="138.2" r="1.2"/><circle cx="398.7" cy="138.0" r="1.2"/><circle cx="408.6" cy="136.3" r="1.2"/><circle cx="418.5" cy="132.7" r="1.2"/><circle cx="79.3" cy="296.7" r="1.2"/><circle cx="89.2" cy="290.3" r="1.2"/><circle cx="99.1" cy="285.2" r="1.2"/><circle cx="109.0" cy="281.2" r="1.2"/><circle cx="118.9" cy="278.0" r="1.2"/><circle cx="128.8" cy="274.9" r="1.2"/><circle cx="138.7" cy="271.3" r="1.2"/><circle cx="148.6" cy="266.7" r="1.2"/><circle cx="158.5" cy="260.9" r="1.2"/><circle cx="168.4" cy="253.8" r="1.2"/><circle cx="178.3" cy="246.0" r="1.2"/><circle cx="188.2" cy="237.9" r="1.2"/><circle cx="198.1" cy="230.4" r="1.2"/><circle cx="227.7" cy="216.3" r="1.2"/><circle cx="237.6" cy="214.5" r="1.2"/><circle cx="247.5" cy="213.3" r="1.2"/><circle cx="257.4" cy="212.0" r="1.2"/><circle cx="267.3" cy="209.5" r="1.2"/><circle cx="277.2" cy="205.1" r="1.2"/><circle cx="287.1" cy="198.6" r="1.2"/><circle cx="297.0" cy="190.0" r="1.2"/><circle cx="306.9" cy="179.9" r="1.2"/><circle cx="386.0" cy="143.8" r="1.2"/><circle cx="395.9" cy="144.2" r="1.2"/><circle cx="405.8" cy="143.1" r="1.2"/><circle cx="415.7" cy="140.1" r="1.2"/><circle cx="425.6" cy="135.4" r="1.2"/><circle cx="435.5" cy="129.5" r="1.2"/><circle cx="76.5" cy="308.9" r="1.2"/><circle cx="86.4" cy="302.9" r="1.2"/><circle cx="96.3" cy="298.0" r="1.2"/><circle cx="106.2" cy="294.2" r="1.2"/><circle cx="116.1" cy="291.1" r="1.2"/><circle cx="126.0" cy="288.1" r="1.2"/><circle cx="135.9" cy="284.6" r="1.2"/><circle cx="145.8" cy="280.1" r="1.2"/><circle cx="155.7" cy="274.0" r="1.2"/><circle cx="165.5" cy="266.5" r="1.2"/><circle cx="175.4" cy="257.7" r="1.2"/><circle cx="185.3" cy="248.4" r="1.2"/><circle cx="254.6" cy="214.0" r="1.2"/><circle cx="264.5" cy="212.4" r="1.2"/><circle cx="274.4" cy="209.4" r="1.2"/><circle cx="284.3" cy="204.5" r="1.2"/><circle cx="294.1" cy="197.4" r="1.2"/><circle cx="393.1" cy="151.8" r="1.2"/><circle cx="403.0" cy="152.0" r="1.2"/><circle cx="412.9" cy="150.2" r="1.2"/><circle cx="422.8" cy="146.2" r="1.2"/><circle cx="432.6" cy="140.5" r="1.2"/><circle cx="442.5" cy="133.6" r="1.2"/><circle cx="452.4" cy="126.5" r="1.2"/><circle cx="83.6" cy="311.4" r="1.2"/><circle cx="93.5" cy="306.7" r="1.2"/><circle cx="103.4" cy="303.1" r="1.2"/><circle cx="113.2" cy="300.5" r="1.2"/><circle cx="123.1" cy="298.3" r="1.2"/><circle cx="133.0" cy="295.7" r="1.2"/><circle cx="142.9" cy="292.1" r="1.2"/><circle cx="152.8" cy="286.9" r="1.2"/><circle cx="162.7" cy="279.9" r="1.2"/><circle cx="172.6" cy="271.3" r="1.2"/><circle cx="182.5" cy="261.6" r="1.2"/><circle cx="192.4" cy="251.4" r="1.2"/><circle cx="400.1" cy="159.1" r="1.2"/><circle cx="410.0" cy="159.7" r="1.2"/><circle cx="419.9" cy="157.8" r="1.2"/><circle cx="429.8" cy="153.6" r="1.2"/><circle cx="439.7" cy="147.5" r="1.2"/><circle cx="449.6" cy="140.3" r="1.2"/><circle cx="459.5" cy="133.1" r="1.2"/><circle cx="80.7" cy="319.3" r="1.2"/><circle cx="90.6" cy="313.7" r="1.2"/><circle cx="100.5" cy="309.5" r="1.2"/><circle cx="110.4" cy="306.6" r="1.2"/><circle cx="120.3" cy="304.5" r="1.2"/><circle cx="130.2" cy="302.5" r="1.2"/><circle cx="140.1" cy="299.8" r="1.2"/><circle cx="150.0" cy="295.7" r="1.2"/><circle cx="159.9" cy="289.9" r="1.2"/><circle cx="169.8" cy="282.2" r="1.2"/><circle cx="179.7" cy="273.1" r="1.2"/><circle cx="189.6" cy="263.0" r="1.2"/><circle cx="407.2" cy="163.7" r="1.2"/><circle cx="417.1" cy="165.1" r="1.2"/><circle cx="427.0" cy="163.9" r="1.2"/><circle cx="436.9" cy="160.2" r="1.2"/><circle cx="446.8" cy="154.6" r="1.2"/><circle cx="456.7" cy="148.1" r="1.2"/><circle cx="466.6" cy="141.6" r="1.2"/><circle cx="476.4" cy="135.9" r="1.2"/><circle cx="87.8" cy="323.9" r="1.2"/><circle cx="97.7" cy="318.1" r="1.2"/><circle cx="107.6" cy="313.7" r="1.2"/><circle cx="117.5" cy="310.6" r="1.2"/><circle cx="127.4" cy="308.0" r="1.2"/><circle cx="137.3" cy="305.1" r="1.2"/><circle cx="147.2" cy="301.3" r="1.2"/><circle cx="157.1" cy="296.0" r="1.2"/><circle cx="166.9" cy="289.0" r="1.2"/><circle cx="176.8" cy="280.4" r="1.2"/><circle cx="424.2" cy="167.5" r="1.2"/><circle cx="434.0" cy="167.0" r="1.2"/><circle cx="443.9" cy="164.2" r="1.2"/><circle cx="453.8" cy="159.8" r="1.2"/><circle cx="463.7" cy="154.7" r="1.2"/><circle cx="473.6" cy="149.7" r="1.2"/><circle cx="483.5" cy="145.4" r="1.2"/><circle cx="94.9" cy="331.6" r="1.2"/><circle cx="104.8" cy="325.7" r="1.2"/><circle cx="114.7" cy="321.0" r="1.2"/><circle cx="124.5" cy="317.1" r="1.2"/><circle cx="134.4" cy="313.2" r="1.2"/><circle cx="144.3" cy="308.6" r="1.2"/><circle cx="154.2" cy="302.8" r="1.2"/><circle cx="164.1" cy="295.4" r="1.2"/><circle cx="441.1" cy="167.9" r="1.2"/><circle cx="451.0" cy="165.7" r="1.2"/><circle cx="460.9" cy="162.5" r="1.2"/><circle cx="470.8" cy="158.9" r="1.2"/><circle cx="480.7" cy="155.7" r="1.2"/><circle cx="490.6" cy="153.2" r="1.2"/><circle cx="500.5" cy="151.3" r="1.2"/><circle cx="92.0" cy="347.4" r="1.2"/><circle cx="101.9" cy="341.0" r="1.2"/><circle cx="111.8" cy="335.6" r="1.2"/><circle cx="121.7" cy="330.8" r="1.2"/><circle cx="131.6" cy="326.2" r="1.2"/><circle cx="141.5" cy="320.9" r="1.2"/><circle cx="151.4" cy="314.4" r="1.2"/><circle cx="161.3" cy="306.2" r="1.2"/><circle cx="458.1" cy="166.9" r="1.2"/><circle cx="468.0" cy="164.2" r="1.2"/><circle cx="477.9" cy="161.7" r="1.2"/><circle cx="487.7" cy="159.8" r="1.2"/><circle cx="497.6" cy="158.7" r="1.2"/><circle cx="507.5" cy="158.1" r="1.2"/><circle cx="99.1" cy="354.6" r="1.2"/><circle cx="109.0" cy="349.6" r="1.2"/><circle cx="118.9" cy="345.3" r="1.2"/><circle cx="128.8" cy="341.0" r="1.2"/><circle cx="138.7" cy="336.2" r="1.2"/><circle cx="148.6" cy="330.0" r="1.2"/><circle cx="158.5" cy="321.9" r="1.2"/><circle cx="484.9" cy="165.4" r="1.2"/><circle cx="494.8" cy="164.0" r="1.2"/><circle cx="504.7" cy="163.4" r="1.2"/><circle cx="514.6" cy="163.2" r="1.2"/><circle cx="106.2" cy="359.7" r="1.2"/><circle cx="116.1" cy="356.1" r="1.2"/><circle cx="125.9" cy="352.9" r="1.2"/><circle cx="135.8" cy="349.4" r="1.2"/><circle cx="145.7" cy="344.7" r="1.2"/><circle cx="155.6" cy="338.0" r="1.2"/><circle cx="165.5" cy="329.1" r="1.2"/><circle cx="482.1" cy="174.3" r="1.2"/><circle cx="492.0" cy="172.1" r="1.2"/><circle cx="501.9" cy="170.6" r="1.2"/><circle cx="511.8" cy="169.7" r="1.2"/><circle cx="521.7" cy="168.9" r="1.2"/><circle cx="113.2" cy="363.5" r="1.2"/><circle cx="123.1" cy="360.8" r="1.2"/><circle cx="133.0" cy="358.3" r="1.2"/><circle cx="142.9" cy="355.1" r="1.2"/><circle cx="152.8" cy="350.4" r="1.2"/><circle cx="162.7" cy="343.5" r="1.2"/><circle cx="172.6" cy="334.2" r="1.2"/><circle cx="479.3" cy="186.7" r="1.2"/><circle cx="489.1" cy="184.2" r="1.2"/><circle cx="499.0" cy="182.1" r="1.2"/><circle cx="508.9" cy="180.4" r="1.2"/><circle cx="518.8" cy="178.8" r="1.2"/><circle cx="528.7" cy="177.0" r="1.2"/><circle cx="120.3" cy="368.6" r="1.2"/><circle cx="130.2" cy="365.9" r="1.2"/><circle cx="140.1" cy="363.1" r="1.2"/><circle cx="150.0" cy="359.5" r="1.2"/><circle cx="159.9" cy="354.2" r="1.2"/><circle cx="169.7" cy="346.7" r="1.2"/><circle cx="179.6" cy="337.0" r="1.2"/><circle cx="476.4" cy="198.4" r="1.2"/><circle cx="486.3" cy="196.6" r="1.2"/><circle cx="496.2" cy="195.0" r="1.2"/><circle cx="506.1" cy="193.5" r="1.2"/><circle cx="516.0" cy="192.1" r="1.2"/><circle cx="525.9" cy="190.1" r="1.2"/><circle cx="535.8" cy="187.3" r="1.2"/><circle cx="127.3" cy="376.7" r="1.2"/><circle cx="137.2" cy="373.4" r="1.2"/><circle cx="147.1" cy="369.7" r="1.2"/><circle cx="157.0" cy="364.9" r="1.2"/><circle cx="166.9" cy="358.3" r="1.2"/><circle cx="176.8" cy="349.7" r="1.2"/><circle cx="483.5" cy="205.4" r="1.2"/><circle cx="493.4" cy="204.8" r="1.2"/><circle cx="503.3" cy="204.4" r="1.2"/><circle cx="513.2" cy="204.0" r="1.2"/><circle cx="523.1" cy="203.1" r="1.2"/><circle cx="532.9" cy="201.3" r="1.2"/><circle cx="542.8" cy="198.0" r="1.2"/><circle cx="134.4" cy="387.8" r="1.2"/><circle cx="144.3" cy="383.9" r="1.2"/><circle cx="154.2" cy="379.1" r="1.2"/><circle cx="164.1" cy="372.9" r="1.2"/><circle cx="174.0" cy="364.8" r="1.2"/><circle cx="183.9" cy="354.8" r="1.2"/><circle cx="490.5" cy="210.7" r="1.2"/><circle cx="500.4" cy="210.9" r="1.2"/><circle cx="510.3" cy="211.5" r="1.2"/><circle cx="520.2" cy="211.9" r="1.2"/><circle cx="530.1" cy="211.5" r="1.2"/><circle cx="540.0" cy="209.9" r="1.2"/><circle cx="549.9" cy="206.6" r="1.2"/><circle cx="141.5" cy="399.6" r="1.2"/><circle cx="151.4" cy="395.7" r="1.2"/><circle cx="161.3" cy="390.4" r="1.2"/><circle cx="171.2" cy="383.1" r="1.2"/><circle cx="181.0" cy="373.9" r="1.2"/><circle cx="190.9" cy="362.9" r="1.2"/><circle cx="497.6" cy="216.2" r="1.2"/><circle cx="507.5" cy="216.5" r="1.2"/><circle cx="517.4" cy="217.1" r="1.2"/><circle cx="527.3" cy="217.5" r="1.2"/><circle cx="537.2" cy="217.2" r="1.2"/><circle cx="547.1" cy="215.4" r="1.2"/><circle cx="557.0" cy="211.9" r="1.2"/><circle cx="158.4" cy="406.3" r="1.2"/><circle cx="168.3" cy="400.9" r="1.2"/><circle cx="178.2" cy="393.5" r="1.2"/><circle cx="188.1" cy="384.0" r="1.2"/><circle cx="198.0" cy="372.8" r="1.2"/><circle cx="504.7" cy="224.1" r="1.2"/><circle cx="514.6" cy="223.7" r="1.2"/><circle cx="524.5" cy="223.6" r="1.2"/><circle cx="534.4" cy="223.1" r="1.2"/><circle cx="544.2" cy="221.7" r="1.2"/><circle cx="554.1" cy="219.0" r="1.2"/><circle cx="564.0" cy="214.8" r="1.2"/><circle cx="165.5" cy="413.8" r="1.2"/><circle cx="175.4" cy="408.7" r="1.2"/><circle cx="185.3" cy="401.5" r="1.2"/><circle cx="195.2" cy="392.5" r="1.2"/><circle cx="205.1" cy="382.2" r="1.2"/><circle cx="215.0" cy="371.3" r="1.2"/><circle cx="432.6" cy="267.4" r="1.2"/><circle cx="442.5" cy="263.9" r="1.2"/><circle cx="452.4" cy="259.1" r="1.2"/><circle cx="462.3" cy="253.7" r="1.2"/><circle cx="472.2" cy="248.2" r="1.2"/><circle cx="482.1" cy="243.3" r="1.2"/><circle cx="491.9" cy="239.5" r="1.2"/><circle cx="501.8" cy="236.7" r="1.2"/><circle cx="511.7" cy="235.0" r="1.2"/><circle cx="521.6" cy="233.8" r="1.2"/><circle cx="531.5" cy="232.5" r="1.2"/><circle cx="541.4" cy="230.6" r="1.2"/><circle cx="551.3" cy="227.6" r="1.2"/><circle cx="561.2" cy="223.2" r="1.2"/><circle cx="172.6" cy="418.4" r="1.2"/><circle cx="182.4" cy="413.2" r="1.2"/><circle cx="192.3" cy="406.3" r="1.2"/><circle cx="202.2" cy="398.1" r="1.2"/><circle cx="212.1" cy="389.1" r="1.2"/><circle cx="222.0" cy="380.0" r="1.2"/><circle cx="231.9" cy="371.4" r="1.2"/><circle cx="429.8" cy="280.7" r="1.2"/><circle cx="439.7" cy="278.3" r="1.2"/><circle cx="449.5" cy="274.3" r="1.2"/><circle cx="459.4" cy="269.4" r="1.2"/><circle cx="469.3" cy="264.0" r="1.2"/><circle cx="479.2" cy="259.0" r="1.2"/><circle cx="489.1" cy="254.7" r="1.2"/><circle cx="499.0" cy="251.5" r="1.2"/><circle cx="508.9" cy="249.2" r="1.2"/><circle cx="518.8" cy="247.5" r="1.2"/><circle cx="528.7" cy="245.8" r="1.2"/><circle cx="538.6" cy="243.6" r="1.2"/><circle cx="548.5" cy="240.3" r="1.2"/><circle cx="558.4" cy="235.6" r="1.2"/><circle cx="568.3" cy="229.5" r="1.2"/><circle cx="189.5" cy="416.2" r="1.2"/><circle cx="199.4" cy="409.1" r="1.2"/><circle cx="209.3" cy="401.2" r="1.2"/><circle cx="219.2" cy="393.4" r="1.2"/><circle cx="229.1" cy="386.0" r="1.2"/><circle cx="239.0" cy="379.6" r="1.2"/><circle cx="248.9" cy="374.2" r="1.2"/><circle cx="258.8" cy="369.7" r="1.2"/><circle cx="268.7" cy="365.6" r="1.2"/><circle cx="278.5" cy="361.3" r="1.2"/><circle cx="288.4" cy="356.2" r="1.2"/><circle cx="298.3" cy="349.9" r="1.2"/><circle cx="426.9" cy="291.5" r="1.2"/><circle cx="436.8" cy="289.3" r="1.2"/><circle cx="446.7" cy="285.7" r="1.2"/><circle cx="456.6" cy="281.0" r="1.2"/><circle cx="466.5" cy="275.9" r="1.2"/><circle cx="476.4" cy="270.9" r="1.2"/><circle cx="486.3" cy="266.7" r="1.2"/><circle cx="496.2" cy="263.5" r="1.2"/><circle cx="506.1" cy="261.4" r="1.2"/><circle cx="516.0" cy="260.1" r="1.2"/><circle cx="525.9" cy="259.0" r="1.2"/><circle cx="535.8" cy="257.5" r="1.2"/><circle cx="545.6" cy="254.9" r="1.2"/><circle cx="555.5" cy="250.8" r="1.2"/><circle cx="565.4" cy="245.0" r="1.2"/><circle cx="196.6" cy="420.1" r="1.2"/><circle cx="206.5" cy="412.2" r="1.2"/><circle cx="216.4" cy="404.3" r="1.2"/><circle cx="226.2" cy="396.9" r="1.2"/><circle cx="236.1" cy="390.8" r="1.2"/><circle cx="246.0" cy="385.9" r="1.2"/><circle cx="255.9" cy="382.4" r="1.2"/><circle cx="265.8" cy="379.6" r="1.2"/><circle cx="275.7" cy="377.1" r="1.2"/><circle cx="285.6" cy="374.1" r="1.2"/><circle cx="295.5" cy="370.0" r="1.2"/><circle cx="305.4" cy="364.3" r="1.2"/><circle cx="315.3" cy="357.2" r="1.2"/><circle cx="325.2" cy="348.8" r="1.2"/><circle cx="414.2" cy="306.2" r="1.2"/><circle cx="424.1" cy="304.4" r="1.2"/><circle cx="434.0" cy="301.5" r="1.2"/><circle cx="443.9" cy="297.2" r="1.2"/><circle cx="453.8" cy="292.0" r="1.2"/><circle cx="463.7" cy="286.2" r="1.2"/><circle cx="473.6" cy="280.5" r="1.2"/><circle cx="483.5" cy="275.6" r="1.2"/><circle cx="493.4" cy="272.0" r="1.2"/><circle cx="503.2" cy="269.7" r="1.2"/><circle cx="513.1" cy="268.6" r="1.2"/><circle cx="523.0" cy="268.2" r="1.2"/><circle cx="532.9" cy="267.7" r="1.2"/><circle cx="542.8" cy="266.5" r="1.2"/><circle cx="552.7" cy="263.9" r="1.2"/><circle cx="562.6" cy="259.6" r="1.2"/><circle cx="572.5" cy="253.5" r="1.2"/><circle cx="213.5" cy="417.7" r="1.2"/><circle cx="223.4" cy="409.5" r="1.2"/><circle cx="233.3" cy="402.3" r="1.2"/><circle cx="243.2" cy="396.6" r="1.2"/><circle cx="253.1" cy="392.6" r="1.2"/><circle cx="263.0" cy="389.8" r="1.2"/><circle cx="272.9" cy="387.8" r="1.2"/><circle cx="282.8" cy="385.8" r="1.2"/><circle cx="292.7" cy="383.2" r="1.2"/><circle cx="302.6" cy="379.3" r="1.2"/><circle cx="312.5" cy="374.0" r="1.2"/><circle cx="322.3" cy="367.3" r="1.2"/><circle cx="332.2" cy="359.7" r="1.2"/><circle cx="342.1" cy="351.7" r="1.2"/><circle cx="352.0" cy="344.2" r="1.2"/><circle cx="391.6" cy="326.8" r="1.2"/><circle cx="401.5" cy="325.2" r="1.2"/><circle cx="411.4" cy="323.5" r="1.2"/><circle cx="421.3" cy="321.2" r="1.2"/><circle cx="431.2" cy="317.6" r="1.2"/><circle cx="441.1" cy="312.6" r="1.2"/><circle cx="451.0" cy="306.4" r="1.2"/><circle cx="460.8" cy="299.4" r="1.2"/><circle cx="470.7" cy="292.3" r="1.2"/><circle cx="480.6" cy="285.9" r="1.2"/><circle cx="490.5" cy="280.7" r="1.2"/><circle cx="500.4" cy="277.1" r="1.2"/><circle cx="510.3" cy="275.1" r="1.2"/><circle cx="520.2" cy="274.3" r="1.2"/><circle cx="530.1" cy="274.1" r="1.2"/><circle cx="540.0" cy="273.7" r="1.2"/><circle cx="549.9" cy="272.3" r="1.2"/><circle cx="559.8" cy="269.6" r="1.2"/><circle cx="569.7" cy="265.1" r="1.2"/><circle cx="230.5" cy="417.5" r="1.2"/><circle cx="240.4" cy="410.6" r="1.2"/><circle cx="250.3" cy="405.3" r="1.2"/><circle cx="260.2" cy="401.5" r="1.2"/><circle cx="270.1" cy="398.7" r="1.2"/><circle cx="279.9" cy="396.5" r="1.2"/><circle cx="289.8" cy="394.0" r="1.2"/><circle cx="299.7" cy="390.7" r="1.2"/><circle cx="309.6" cy="386.2" r="1.2"/><circle cx="319.5" cy="380.4" r="1.2"/><circle cx="329.4" cy="373.6" r="1.2"/><circle cx="339.3" cy="366.4" r="1.2"/><circle cx="349.2" cy="359.3" r="1.2"/><circle cx="359.1" cy="353.2" r="1.2"/><circle cx="369.0" cy="348.3" r="1.2"/><circle cx="378.9" cy="344.9" r="1.2"/><circle cx="388.8" cy="342.7" r="1.2"/><circle cx="398.7" cy="341.4" r="1.2"/><circle cx="408.5" cy="340.1" r="1.2"/><circle cx="418.4" cy="338.2" r="1.2"/><circle cx="428.3" cy="335.1" r="1.2"/><circle cx="438.2" cy="330.4" r="1.2"/><circle cx="448.1" cy="324.1" r="1.2"/><circle cx="458.0" cy="316.6" r="1.2"/><circle cx="467.9" cy="308.5" r="1.2"/><circle cx="477.8" cy="300.6" r="1.2"/><circle cx="487.7" cy="293.7" r="1.2"/><circle cx="497.6" cy="288.2" r="1.2"/><circle cx="507.5" cy="284.4" r="1.2"/><circle cx="517.4" cy="282.1" r="1.2"/><circle cx="527.3" cy="280.8" r="1.2"/><circle cx="537.2" cy="280.0" r="1.2"/><circle cx="547.0" cy="278.7" r="1.2"/><circle cx="556.9" cy="276.4" r="1.2"/><circle cx="566.8" cy="272.8" r="1.2"/><circle cx="247.4" cy="421.1" r="1.2"/><circle cx="257.3" cy="416.4" r="1.2"/><circle cx="267.2" cy="412.9" r="1.2"/><circle cx="277.1" cy="410.0" r="1.2"/><circle cx="287.0" cy="407.1" r="1.2"/><circle cx="296.9" cy="403.5" r="1.2"/><circle cx="306.8" cy="398.9" r="1.2"/><circle cx="316.7" cy="393.0" r="1.2"/><circle cx="326.6" cy="386.1" r="1.2"/><circle cx="336.5" cy="378.6" r="1.2"/><circle cx="346.4" cy="371.2" r="1.2"/><circle cx="356.3" cy="364.6" r="1.2"/><circle cx="366.1" cy="359.3" r="1.2"/><circle cx="376.0" cy="355.6" r="1.2"/><circle cx="385.9" cy="353.4" r="1.2"/><circle cx="395.8" cy="352.4" r="1.2"/><circle cx="405.7" cy="351.9" r="1.2"/><circle cx="415.6" cy="351.0" r="1.2"/><circle cx="425.5" cy="349.1" r="1.2"/><circle cx="435.4" cy="345.7" r="1.2"/><circle cx="445.3" cy="340.6" r="1.2"/><circle cx="455.2" cy="333.9" r="1.2"/><circle cx="465.1" cy="326.1" r="1.2"/><circle cx="475.0" cy="318.0" r="1.2"/><circle cx="484.9" cy="310.3" r="1.2"/><circle cx="494.8" cy="303.6" r="1.2"/><circle cx="504.6" cy="298.3" r="1.2"/><circle cx="514.5" cy="294.6" r="1.2"/><circle cx="524.4" cy="291.9" r="1.2"/><circle cx="534.3" cy="289.9" r="1.2"/><circle cx="544.2" cy="287.9" r="1.2"/><circle cx="554.1" cy="285.1" r="1.2"/><circle cx="564.0" cy="281.2" r="1.2"/><circle cx="264.4" cy="427.9" r="1.2"/><circle cx="274.3" cy="425.2" r="1.2"/><circle cx="284.2" cy="422.4" r="1.2"/><circle cx="294.1" cy="419.0" r="1.2"/><circle cx="304.0" cy="414.5" r="1.2"/><circle cx="313.9" cy="408.6" r="1.2"/><circle cx="323.7" cy="401.4" r="1.2"/><circle cx="333.6" cy="393.2" r="1.2"/><circle cx="343.5" cy="384.9" r="1.2"/><circle cx="353.4" cy="377.0" r="1.2"/><circle cx="363.3" cy="370.3" r="1.2"/><circle cx="373.2" cy="365.3" r="1.2"/><circle cx="383.1" cy="362.1" r="1.2"/><circle cx="393.0" cy="360.3" r="1.2"/><circle cx="402.9" cy="359.6" r="1.2"/><circle cx="412.8" cy="359.1" r="1.2"/><circle cx="422.7" cy="358.1" r="1.2"/><circle cx="432.6" cy="355.9" r="1.2"/><circle cx="442.5" cy="352.2" r="1.2"/><circle cx="452.4" cy="346.9" r="1.2"/><circle cx="462.2" cy="340.3" r="1.2"/><circle cx="472.1" cy="333.0" r="1.2"/><circle cx="482.0" cy="325.7" r="1.2"/><circle cx="491.9" cy="319.1" r="1.2"/><circle cx="501.8" cy="313.6" r="1.2"/><circle cx="511.7" cy="309.4" r="1.2"/><circle cx="521.6" cy="306.2" r="1.2"/><circle cx="531.5" cy="303.7" r="1.2"/><circle cx="541.4" cy="301.2" r="1.2"/><circle cx="551.3" cy="298.0" r="1.2"/><circle cx="561.2" cy="293.8" r="1.2"/><circle cx="281.3" cy="435.8" r="1.2"/><circle cx="291.2" cy="433.6" r="1.2"/><circle cx="301.1" cy="430.2" r="1.2"/><circle cx="311.0" cy="425.2" r="1.2"/><circle cx="320.9" cy="418.6" r="1.2"/><circle cx="330.8" cy="410.6" r="1.2"/><circle cx="340.7" cy="401.9" r="1.2"/><circle cx="350.6" cy="393.1" r="1.2"/><circle cx="360.5" cy="385.1" r="1.2"/><circle cx="370.4" cy="378.5" r="1.2"/><circle cx="380.3" cy="373.5" r="1.2"/><circle cx="390.2" cy="370.2" r="1.2"/><circle cx="400.1" cy="368.3" r="1.2"/><circle cx="410.0" cy="367.0" r="1.2"/><circle cx="419.8" cy="365.6" r="1.2"/><circle cx="429.7" cy="363.6" r="1.2"/><circle cx="439.6" cy="360.3" r="1.2"/><circle cx="449.5" cy="355.7" r="1.2"/><circle cx="459.4" cy="349.9" r="1.2"/><circle cx="469.3" cy="343.4" r="1.2"/><circle cx="479.2" cy="336.8" r="1.2"/><circle cx="489.1" cy="330.7" r="1.2"/><circle cx="499.0" cy="325.6" r="1.2"/><circle cx="508.9" cy="321.7" r="1.2"/><circle cx="518.8" cy="319.0" r="1.2"/><circle cx="528.7" cy="316.9" r="1.2"/><circle cx="538.6" cy="315.0" r="1.2"/><circle cx="548.4" cy="312.5" r="1.2"/><circle cx="558.3" cy="308.8" r="1.2"/><circle cx="298.3" cy="441.6" r="1.2"/><circle cx="308.2" cy="438.3" r="1.2"/><circle cx="318.1" cy="433.4" r="1.2"/><circle cx="328.0" cy="426.7" r="1.2"/><circle cx="337.9" cy="418.9" r="1.2"/><circle cx="347.8" cy="410.4" r="1.2"/><circle cx="357.7" cy="402.2" r="1.2"/><circle cx="367.6" cy="394.8" r="1.2"/><circle cx="377.4" cy="388.8" r="1.2"/><circle cx="387.3" cy="384.2" r="1.2"/><circle cx="397.2" cy="380.9" r="1.2"/><circle cx="407.1" cy="378.5" r="1.2"/><circle cx="417.0" cy="376.3" r="1.2"/><circle cx="426.9" cy="373.6" r="1.2"/><circle cx="436.8" cy="369.9" r="1.2"/><circle cx="446.7" cy="365.0" r="1.2"/><circle cx="456.6" cy="359.0" r="1.2"/><circle cx="466.5" cy="352.2" r="1.2"/><circle cx="476.4" cy="345.3" r="1.2"/><circle cx="486.3" cy="339.0" r="1.2"/><circle cx="496.2" cy="333.7" r="1.2"/><circle cx="506.0" cy="329.8" r="1.2"/><circle cx="515.9" cy="327.3" r="1.2"/><circle cx="525.8" cy="325.9" r="1.2"/><circle cx="535.7" cy="325.0" r="1.2"/><circle cx="545.6" cy="323.7" r="1.2"/><circle cx="555.5" cy="321.5" r="1.2"/><circle cx="325.1" cy="438.0" r="1.2"/><circle cx="335.0" cy="431.6" r="1.2"/><circle cx="344.9" cy="424.3" r="1.2"/><circle cx="354.8" cy="416.9" r="1.2"/><circle cx="364.7" cy="409.9" r="1.2"/><circle cx="374.6" cy="403.9" r="1.2"/><circle cx="384.5" cy="399.2" r="1.2"/><circle cx="394.4" cy="395.7" r="1.2"/><circle cx="404.3" cy="393.0" r="1.2"/><circle cx="414.2" cy="390.4" r="1.2"/><circle cx="424.1" cy="387.4" r="1.2"/><circle cx="434.0" cy="383.5" r="1.2"/><circle cx="443.9" cy="378.2" r="1.2"/><circle cx="453.8" cy="371.6" r="1.2"/><circle cx="463.6" cy="364.1" r="1.2"/><circle cx="473.5" cy="356.2" r="1.2"/><circle cx="483.4" cy="348.6" r="1.2"/><circle cx="493.3" cy="342.1" r="1.2"/><circle cx="503.2" cy="337.1" r="1.2"/><circle cx="513.1" cy="333.8" r="1.2"/><circle cx="523.0" cy="332.0" r="1.2"/><circle cx="532.9" cy="331.1" r="1.2"/><circle cx="542.8" cy="330.6" r="1.2"/><circle cx="352.0" cy="426.9" r="1.2"/><circle cx="361.9" cy="420.5" r="1.2"/><circle cx="371.8" cy="415.0" r="1.2"/><circle cx="381.7" cy="410.8" r="1.2"/><circle cx="391.6" cy="407.8" r="1.2"/><circle cx="401.5" cy="405.7" r="1.2"/><circle cx="411.4" cy="403.9" r="1.2"/><circle cx="421.2" cy="401.7" r="1.2"/><circle cx="431.1" cy="398.5" r="1.2"/><circle cx="441.0" cy="393.8" r="1.2"/><circle cx="450.9" cy="387.5" r="1.2"/><circle cx="460.8" cy="379.9" r="1.2"/><circle cx="470.7" cy="371.4" r="1.2"/><circle cx="480.6" cy="362.8" r="1.2"/><circle cx="490.5" cy="354.9" r="1.2"/><circle cx="500.4" cy="348.3" r="1.2"/><circle cx="510.3" cy="343.3" r="1.2"/><circle cx="520.2" cy="340.0" r="1.2"/><circle cx="530.1" cy="338.0" r="1.2"/><circle cx="398.6" cy="413.9" r="1.2"/><circle cx="408.5" cy="412.9" r="1.2"/><circle cx="418.4" cy="411.9" r="1.2"/><circle cx="428.3" cy="410.1" r="1.2"/><circle cx="438.2" cy="407.0" r="1.2"/><circle cx="448.1" cy="402.2" r="1.2"/><circle cx="458.0" cy="395.7" r="1.2"/><circle cx="467.9" cy="387.9" r="1.2"/><circle cx="477.8" cy="379.5" r="1.2"/><circle cx="487.7" cy="371.1" r="1.2"/><circle cx="497.6" cy="363.6" r="1.2"/><circle cx="507.5" cy="357.3" r="1.2"/></g><g fill="#53715a"><circle cx="325.3" cy="139.0" r="1.2"/><circle cx="335.1" cy="134.1" r="1.2"/><circle cx="312.5" cy="154.4" r="1.2"/><circle cx="322.4" cy="146.0" r="1.2"/><circle cx="332.3" cy="139.3" r="1.2"/><circle cx="342.2" cy="134.8" r="1.2"/><circle cx="352.1" cy="132.6" r="1.2"/><circle cx="319.6" cy="157.2" r="1.2"/><circle cx="329.5" cy="148.4" r="1.2"/><circle cx="339.4" cy="141.9" r="1.2"/><circle cx="349.3" cy="137.9" r="1.2"/><circle cx="359.2" cy="136.2" r="1.2"/><circle cx="369.1" cy="136.4" r="1.2"/><circle cx="207.9" cy="224.1" r="1.2"/><circle cx="217.8" cy="219.4" r="1.2"/><circle cx="316.8" cy="169.4" r="1.2"/><circle cx="326.7" cy="159.5" r="1.2"/><circle cx="336.5" cy="151.5" r="1.2"/><circle cx="346.4" cy="145.9" r="1.2"/><circle cx="356.3" cy="142.9" r="1.2"/><circle cx="366.2" cy="142.2" r="1.2"/><circle cx="376.1" cy="142.8" r="1.2"/><circle cx="195.2" cy="239.2" r="1.2"/><circle cx="205.1" cy="231.1" r="1.2"/><circle cx="215.0" cy="224.5" r="1.2"/><circle cx="224.9" cy="219.8" r="1.2"/><circle cx="234.8" cy="216.9" r="1.2"/><circle cx="244.7" cy="215.2" r="1.2"/><circle cx="304.0" cy="188.4" r="1.2"/><circle cx="313.9" cy="178.3" r="1.2"/><circle cx="323.8" cy="168.3" r="1.2"/><circle cx="333.7" cy="159.5" r="1.2"/><circle cx="343.6" cy="152.9" r="1.2"/><circle cx="353.5" cy="149.0" r="1.2"/><circle cx="363.4" cy="147.8" r="1.2"/><circle cx="373.3" cy="148.6" r="1.2"/><circle cx="383.2" cy="150.4" r="1.2"/><circle cx="202.3" cy="241.8" r="1.2"/><circle cx="212.2" cy="233.3" r="1.2"/><circle cx="222.1" cy="226.6" r="1.2"/><circle cx="232.0" cy="221.8" r="1.2"/><circle cx="241.9" cy="218.7" r="1.2"/><circle cx="251.7" cy="216.5" r="1.2"/><circle cx="261.6" cy="214.6" r="1.2"/><circle cx="271.5" cy="211.9" r="1.2"/><circle cx="281.4" cy="207.7" r="1.2"/><circle cx="291.3" cy="201.5" r="1.2"/><circle cx="301.2" cy="193.4" r="1.2"/><circle cx="311.1" cy="183.7" r="1.2"/><circle cx="321.0" cy="173.6" r="1.2"/><circle cx="330.9" cy="164.1" r="1.2"/><circle cx="360.6" cy="149.8" r="1.2"/><circle cx="370.5" cy="150.7" r="1.2"/><circle cx="380.4" cy="153.4" r="1.2"/><circle cx="390.2" cy="156.6" r="1.2"/><circle cx="199.5" cy="252.9" r="1.2"/><circle cx="209.3" cy="243.5" r="1.2"/><circle cx="219.2" cy="235.5" r="1.2"/><circle cx="229.1" cy="229.3" r="1.2"/><circle cx="239.0" cy="224.8" r="1.2"/><circle cx="248.9" cy="221.6" r="1.2"/><circle cx="258.8" cy="218.9" r="1.2"/><circle cx="268.7" cy="216.0" r="1.2"/><circle cx="278.6" cy="212.0" r="1.2"/><circle cx="288.5" cy="206.3" r="1.2"/><circle cx="298.4" cy="198.6" r="1.2"/><circle cx="308.3" cy="189.2" r="1.2"/><circle cx="387.4" cy="155.5" r="1.2"/><circle cx="397.3" cy="160.2" r="1.2"/><circle cx="186.7" cy="270.7" r="1.2"/><circle cx="196.6" cy="260.6" r="1.2"/><circle cx="206.5" cy="250.9" r="1.2"/><circle cx="216.4" cy="242.3" r="1.2"/><circle cx="226.3" cy="235.4" r="1.2"/><circle cx="236.2" cy="230.2" r="1.2"/><circle cx="246.1" cy="226.5" r="1.2"/><circle cx="256.0" cy="223.7" r="1.2"/><circle cx="265.9" cy="221.1" r="1.2"/><circle cx="275.8" cy="217.7" r="1.2"/><circle cx="285.7" cy="212.8" r="1.2"/><circle cx="295.6" cy="206.0" r="1.2"/><circle cx="305.4" cy="197.2" r="1.2"/><circle cx="394.5" cy="156.1" r="1.2"/><circle cx="404.4" cy="161.4" r="1.2"/><circle cx="414.3" cy="165.5" r="1.2"/><circle cx="174.0" cy="286.4" r="1.2"/><circle cx="183.9" cy="276.2" r="1.2"/><circle cx="193.8" cy="265.4" r="1.2"/><circle cx="203.7" cy="254.9" r="1.2"/><circle cx="272.9" cy="220.7" r="1.2"/><circle cx="282.8" cy="217.5" r="1.2"/><circle cx="292.7" cy="212.5" r="1.2"/><circle cx="411.4" cy="162.7" r="1.2"/><circle cx="421.3" cy="166.5" r="1.2"/><circle cx="431.2" cy="168.2" r="1.2"/><circle cx="171.2" cy="296.3" r="1.2"/><circle cx="181.1" cy="284.8" r="1.2"/><circle cx="191.0" cy="272.6" r="1.2"/><circle cx="418.5" cy="166.6" r="1.2"/><circle cx="428.4" cy="169.1" r="1.2"/><circle cx="438.3" cy="169.9" r="1.2"/><circle cx="448.2" cy="169.0" r="1.2"/><circle cx="168.3" cy="311.7" r="1.2"/><circle cx="178.2" cy="299.6" r="1.2"/><circle cx="188.1" cy="286.0" r="1.2"/><circle cx="425.6" cy="174.0" r="1.2"/><circle cx="435.4" cy="175.1" r="1.2"/><circle cx="445.3" cy="174.6" r="1.2"/><circle cx="455.2" cy="172.9" r="1.2"/><circle cx="465.1" cy="170.3" r="1.2"/><circle cx="475.0" cy="167.6" r="1.2"/><circle cx="175.4" cy="317.8" r="1.2"/><circle cx="185.3" cy="304.4" r="1.2"/><circle cx="195.2" cy="289.6" r="1.2"/><circle cx="422.7" cy="182.5" r="1.2"/><circle cx="432.6" cy="183.9" r="1.2"/><circle cx="442.5" cy="183.9" r="1.2"/><circle cx="452.4" cy="182.5" r="1.2"/><circle cx="462.3" cy="180.1" r="1.2"/><circle cx="472.2" cy="177.1" r="1.2"/><circle cx="182.5" cy="322.5" r="1.2"/><circle cx="192.4" cy="308.8" r="1.2"/><circle cx="202.3" cy="294.0" r="1.2"/><circle cx="419.9" cy="190.9" r="1.2"/><circle cx="429.8" cy="192.9" r="1.2"/><circle cx="439.7" cy="193.8" r="1.2"/><circle cx="449.6" cy="193.4" r="1.2"/><circle cx="459.5" cy="191.8" r="1.2"/><circle cx="469.4" cy="189.4" r="1.2"/><circle cx="189.5" cy="325.2" r="1.2"/><circle cx="199.4" cy="311.8" r="1.2"/><circle cx="427.0" cy="199.8" r="1.2"/><circle cx="436.9" cy="201.3" r="1.2"/><circle cx="446.7" cy="201.8" r="1.2"/><circle cx="456.6" cy="201.4" r="1.2"/><circle cx="466.5" cy="200.1" r="1.2"/><circle cx="186.7" cy="339.1" r="1.2"/><circle cx="196.6" cy="327.1" r="1.2"/><circle cx="206.5" cy="314.1" r="1.2"/><circle cx="434.0" cy="207.6" r="1.2"/><circle cx="443.9" cy="208.0" r="1.2"/><circle cx="453.8" cy="207.8" r="1.2"/><circle cx="463.7" cy="207.1" r="1.2"/><circle cx="473.6" cy="206.3" r="1.2"/><circle cx="193.8" cy="343.2" r="1.2"/><circle cx="203.7" cy="330.7" r="1.2"/><circle cx="213.6" cy="317.9" r="1.2"/><circle cx="431.2" cy="217.5" r="1.2"/><circle cx="441.1" cy="216.5" r="1.2"/><circle cx="451.0" cy="215.0" r="1.2"/><circle cx="460.9" cy="213.4" r="1.2"/><circle cx="470.8" cy="212.0" r="1.2"/><circle cx="480.7" cy="211.1" r="1.2"/><circle cx="200.8" cy="350.6" r="1.2"/><circle cx="210.7" cy="337.8" r="1.2"/><circle cx="220.6" cy="325.3" r="1.2"/><circle cx="408.6" cy="235.4" r="1.2"/><circle cx="418.5" cy="234.9" r="1.2"/><circle cx="428.4" cy="233.4" r="1.2"/><circle cx="438.3" cy="230.9" r="1.2"/><circle cx="448.1" cy="227.6" r="1.2"/><circle cx="458.0" cy="224.2" r="1.2"/><circle cx="467.9" cy="221.0" r="1.2"/><circle cx="477.8" cy="218.4" r="1.2"/><circle cx="487.7" cy="216.8" r="1.2"/><circle cx="207.9" cy="360.7" r="1.2"/><circle cx="217.8" cy="348.4" r="1.2"/><circle cx="227.7" cy="336.7" r="1.2"/><circle cx="237.6" cy="325.9" r="1.2"/><circle cx="395.9" cy="252.1" r="1.2"/><circle cx="405.7" cy="253.5" r="1.2"/><circle cx="415.6" cy="253.8" r="1.2"/><circle cx="425.5" cy="252.5" r="1.2"/><circle cx="435.4" cy="249.6" r="1.2"/><circle cx="445.3" cy="245.6" r="1.2"/><circle cx="455.2" cy="240.7" r="1.2"/><circle cx="465.1" cy="235.8" r="1.2"/><circle cx="475.0" cy="231.3" r="1.2"/><circle cx="484.9" cy="227.7" r="1.2"/><circle cx="494.8" cy="225.3" r="1.2"/><circle cx="224.8" cy="360.5" r="1.2"/><circle cx="234.7" cy="350.4" r="1.2"/><circle cx="244.6" cy="341.2" r="1.2"/><circle cx="254.5" cy="333.2" r="1.2"/><circle cx="264.4" cy="325.9" r="1.2"/><circle cx="274.3" cy="319.1" r="1.2"/><circle cx="393.0" cy="265.6" r="1.2"/><circle cx="402.9" cy="267.9" r="1.2"/><circle cx="412.8" cy="269.3" r="1.2"/><circle cx="422.7" cy="269.3" r="1.2"/><circle cx="241.8" cy="363.6" r="1.2"/><circle cx="251.7" cy="356.7" r="1.2"/><circle cx="261.6" cy="350.5" r="1.2"/><circle cx="271.5" cy="344.6" r="1.2"/><circle cx="281.4" cy="338.5" r="1.2"/><circle cx="291.3" cy="331.7" r="1.2"/><circle cx="301.2" cy="323.9" r="1.2"/><circle cx="311.1" cy="315.3" r="1.2"/><circle cx="320.9" cy="306.2" r="1.2"/><circle cx="390.2" cy="277.0" r="1.2"/><circle cx="400.1" cy="279.0" r="1.2"/><circle cx="410.0" cy="280.7" r="1.2"/><circle cx="419.9" cy="281.5" r="1.2"/><circle cx="308.2" cy="342.3" r="1.2"/><circle cx="318.1" cy="333.4" r="1.2"/><circle cx="328.0" cy="324.0" r="1.2"/><circle cx="337.9" cy="314.6" r="1.2"/><circle cx="347.8" cy="306.2" r="1.2"/><circle cx="357.7" cy="299.3" r="1.2"/><circle cx="367.6" cy="294.5" r="1.2"/><circle cx="377.5" cy="291.8" r="1.2"/><circle cx="387.4" cy="291.0" r="1.2"/><circle cx="397.3" cy="291.3" r="1.2"/><circle cx="407.1" cy="292.0" r="1.2"/><circle cx="417.0" cy="292.3" r="1.2"/><circle cx="335.1" cy="339.9" r="1.2"/><circle cx="345.0" cy="331.1" r="1.2"/><circle cx="354.9" cy="323.2" r="1.2"/><circle cx="364.7" cy="316.9" r="1.2"/><circle cx="374.6" cy="312.3" r="1.2"/><circle cx="384.5" cy="309.5" r="1.2"/><circle cx="394.4" cy="308.0" r="1.2"/><circle cx="404.3" cy="307.1" r="1.2"/><circle cx="361.9" cy="337.7" r="1.2"/><circle cx="371.8" cy="332.7" r="1.2"/><circle cx="381.7" cy="329.2" r="1.2"/></g><g fill="#6a896b"><circle cx="340.8" cy="156.4" r="1.2"/><circle cx="350.7" cy="151.6" r="1.2"/><circle cx="318.2" cy="178.6" r="1.2"/><circle cx="328.1" cy="168.1" r="1.2"/><circle cx="338.0" cy="158.9" r="1.2"/><circle cx="347.8" cy="152.2" r="1.2"/><circle cx="357.7" cy="148.6" r="1.2"/><circle cx="367.6" cy="148.5" r="1.2"/><circle cx="377.5" cy="151.1" r="1.2"/><circle cx="315.3" cy="186.8" r="1.2"/><circle cx="325.2" cy="175.6" r="1.2"/><circle cx="335.1" cy="164.9" r="1.2"/><circle cx="345.0" cy="155.8" r="1.2"/><circle cx="354.9" cy="149.5" r="1.2"/><circle cx="364.8" cy="146.7" r="1.2"/><circle cx="374.7" cy="147.4" r="1.2"/><circle cx="384.6" cy="151.0" r="1.2"/><circle cx="213.6" cy="245.5" r="1.2"/><circle cx="223.5" cy="237.7" r="1.2"/><circle cx="233.4" cy="231.8" r="1.2"/><circle cx="243.3" cy="227.7" r="1.2"/><circle cx="253.1" cy="225.0" r="1.2"/><circle cx="263.0" cy="223.0" r="1.2"/><circle cx="302.6" cy="205.6" r="1.2"/><circle cx="312.5" cy="196.7" r="1.2"/><circle cx="322.4" cy="186.4" r="1.2"/><circle cx="332.3" cy="175.5" r="1.2"/><circle cx="342.2" cy="165.2" r="1.2"/><circle cx="381.8" cy="149.4" r="1.2"/><circle cx="391.6" cy="152.9" r="1.2"/><circle cx="401.5" cy="157.8" r="1.2"/><circle cx="200.9" cy="260.3" r="1.2"/><circle cx="210.7" cy="248.8" r="1.2"/><circle cx="220.6" cy="239.0" r="1.2"/><circle cx="230.5" cy="231.3" r="1.2"/><circle cx="240.4" cy="225.8" r="1.2"/><circle cx="250.3" cy="222.3" r="1.2"/><circle cx="260.2" cy="220.2" r="1.2"/><circle cx="270.1" cy="218.7" r="1.2"/><circle cx="280.0" cy="216.9" r="1.2"/><circle cx="289.9" cy="214.0" r="1.2"/><circle cx="299.8" cy="209.7" r="1.2"/><circle cx="309.7" cy="203.5" r="1.2"/><circle cx="319.6" cy="195.6" r="1.2"/><circle cx="329.5" cy="186.6" r="1.2"/><circle cx="339.4" cy="177.2" r="1.2"/><circle cx="388.8" cy="155.9" r="1.2"/><circle cx="398.7" cy="158.9" r="1.2"/><circle cx="408.6" cy="162.9" r="1.2"/><circle cx="198.0" cy="271.8" r="1.2"/><circle cx="207.9" cy="258.0" r="1.2"/><circle cx="217.8" cy="245.4" r="1.2"/><circle cx="287.1" cy="210.6" r="1.2"/><circle cx="297.0" cy="207.9" r="1.2"/><circle cx="306.8" cy="204.1" r="1.2"/><circle cx="316.7" cy="199.0" r="1.2"/><circle cx="326.6" cy="192.8" r="1.2"/><circle cx="386.0" cy="164.7" r="1.2"/><circle cx="395.9" cy="166.1" r="1.2"/><circle cx="405.8" cy="168.7" r="1.2"/><circle cx="415.7" cy="171.7" r="1.2"/><circle cx="205.1" cy="274.4" r="1.2"/><circle cx="215.0" cy="259.7" r="1.2"/><circle cx="393.0" cy="175.5" r="1.2"/><circle cx="402.9" cy="177.6" r="1.2"/><circle cx="412.8" cy="180.2" r="1.2"/><circle cx="212.2" cy="279.0" r="1.2"/><circle cx="222.0" cy="264.6" r="1.2"/><circle cx="390.2" cy="183.4" r="1.2"/><circle cx="400.1" cy="185.6" r="1.2"/><circle cx="410.0" cy="188.3" r="1.2"/><circle cx="209.3" cy="297.8" r="1.2"/><circle cx="219.2" cy="283.9" r="1.2"/><circle cx="229.1" cy="270.8" r="1.2"/><circle cx="397.3" cy="192.3" r="1.2"/><circle cx="407.2" cy="194.9" r="1.2"/><circle cx="417.1" cy="197.6" r="1.2"/><circle cx="216.4" cy="301.1" r="1.2"/><circle cx="226.3" cy="288.6" r="1.2"/><circle cx="236.2" cy="277.2" r="1.2"/><circle cx="394.5" cy="201.5" r="1.2"/><circle cx="404.3" cy="203.4" r="1.2"/><circle cx="414.2" cy="205.2" r="1.2"/><circle cx="424.1" cy="206.7" r="1.2"/><circle cx="223.4" cy="305.6" r="1.2"/><circle cx="233.3" cy="294.4" r="1.2"/><circle cx="243.2" cy="284.5" r="1.2"/><circle cx="253.1" cy="276.1" r="1.2"/><circle cx="391.6" cy="215.9" r="1.2"/><circle cx="401.5" cy="217.0" r="1.2"/><circle cx="411.4" cy="217.8" r="1.2"/><circle cx="421.3" cy="217.9" r="1.2"/><circle cx="230.5" cy="313.6" r="1.2"/><circle cx="240.4" cy="303.3" r="1.2"/><circle cx="250.3" cy="294.5" r="1.2"/><circle cx="260.2" cy="286.9" r="1.2"/><circle cx="270.1" cy="280.3" r="1.2"/><circle cx="280.0" cy="274.1" r="1.2"/><circle cx="369.0" cy="231.8" r="1.2"/><circle cx="378.9" cy="232.5" r="1.2"/><circle cx="388.8" cy="233.7" r="1.2"/><circle cx="398.7" cy="234.8" r="1.2"/><circle cx="247.5" cy="316.5" r="1.2"/><circle cx="257.4" cy="308.4" r="1.2"/><circle cx="267.2" cy="301.3" r="1.2"/><circle cx="277.1" cy="294.7" r="1.2"/><circle cx="287.0" cy="288.1" r="1.2"/><circle cx="296.9" cy="281.4" r="1.2"/><circle cx="306.8" cy="274.5" r="1.2"/><circle cx="316.7" cy="267.5" r="1.2"/><circle cx="326.6" cy="260.9" r="1.2"/><circle cx="356.3" cy="248.3" r="1.2"/><circle cx="366.2" cy="247.6" r="1.2"/><circle cx="376.1" cy="248.4" r="1.2"/><circle cx="386.0" cy="250.2" r="1.2"/><circle cx="284.2" cy="312.3" r="1.2"/><circle cx="294.1" cy="305.0" r="1.2"/><circle cx="304.0" cy="297.3" r="1.2"/><circle cx="313.9" cy="289.2" r="1.2"/><circle cx="323.8" cy="281.2" r="1.2"/><circle cx="333.7" cy="273.9" r="1.2"/><circle cx="343.6" cy="267.9" r="1.2"/><circle cx="353.5" cy="263.8" r="1.2"/><circle cx="363.3" cy="261.7" r="1.2"/><circle cx="373.2" cy="261.7" r="1.2"/><circle cx="383.1" cy="263.2" r="1.2"/><circle cx="330.8" cy="297.2" r="1.2"/><circle cx="340.7" cy="289.1" r="1.2"/><circle cx="350.6" cy="282.5" r="1.2"/><circle cx="360.5" cy="278.0" r="1.2"/><circle cx="370.4" cy="275.8" r="1.2"/><circle cx="380.3" cy="275.6" r="1.2"/></g><g fill="#809e7d"><circle cx="352.1" cy="156.6" r="1.2"/><circle cx="362.0" cy="150.9" r="1.2"/><circle cx="371.9" cy="148.5" r="1.2"/><circle cx="349.2" cy="168.4" r="1.2"/><circle cx="359.1" cy="161.3" r="1.2"/><circle cx="369.0" cy="156.7" r="1.2"/><circle cx="378.9" cy="154.9" r="1.2"/><circle cx="227.7" cy="234.8" r="1.2"/><circle cx="237.6" cy="226.6" r="1.2"/><circle cx="247.5" cy="220.7" r="1.2"/><circle cx="257.4" cy="216.8" r="1.2"/><circle cx="267.3" cy="214.4" r="1.2"/><circle cx="277.2" cy="212.5" r="1.2"/><circle cx="336.5" cy="186.0" r="1.2"/><circle cx="346.4" cy="179.1" r="1.2"/><circle cx="356.3" cy="172.9" r="1.2"/><circle cx="366.2" cy="168.1" r="1.2"/><circle cx="376.1" cy="165.3" r="1.2"/><circle cx="224.9" cy="246.4" r="1.2"/><circle cx="234.8" cy="235.2" r="1.2"/><circle cx="244.7" cy="226.2" r="1.2"/><circle cx="254.6" cy="219.5" r="1.2"/><circle cx="264.4" cy="214.5" r="1.2"/><circle cx="274.3" cy="210.9" r="1.2"/><circle cx="284.2" cy="207.9" r="1.2"/><circle cx="294.1" cy="205.0" r="1.2"/><circle cx="304.0" cy="201.8" r="1.2"/><circle cx="313.9" cy="198.1" r="1.2"/><circle cx="323.8" cy="193.8" r="1.2"/><circle cx="333.7" cy="189.2" r="1.2"/><circle cx="343.6" cy="184.7" r="1.2"/><circle cx="353.5" cy="180.5" r="1.2"/><circle cx="363.4" cy="177.2" r="1.2"/><circle cx="373.3" cy="175.1" r="1.2"/><circle cx="383.2" cy="174.6" r="1.2"/><circle cx="231.9" cy="251.5" r="1.2"/><circle cx="241.8" cy="240.4" r="1.2"/><circle cx="251.7" cy="231.1" r="1.2"/><circle cx="261.6" cy="223.7" r="1.2"/><circle cx="271.5" cy="217.6" r="1.2"/><circle cx="281.4" cy="212.5" r="1.2"/><circle cx="291.3" cy="207.9" r="1.2"/><circle cx="301.2" cy="203.5" r="1.2"/><circle cx="311.1" cy="199.2" r="1.2"/><circle cx="321.0" cy="195.0" r="1.2"/><circle cx="330.9" cy="191.0" r="1.2"/><circle cx="340.8" cy="187.5" r="1.2"/><circle cx="350.6" cy="184.7" r="1.2"/><circle cx="360.5" cy="182.7" r="1.2"/><circle cx="370.4" cy="181.8" r="1.2"/><circle cx="380.3" cy="182.0" r="1.2"/><circle cx="239.0" cy="259.0" r="1.2"/><circle cx="248.9" cy="248.8" r="1.2"/><circle cx="258.8" cy="240.1" r="1.2"/><circle cx="268.7" cy="232.6" r="1.2"/><circle cx="278.6" cy="225.9" r="1.2"/><circle cx="288.5" cy="219.7" r="1.2"/><circle cx="298.4" cy="213.7" r="1.2"/><circle cx="308.2" cy="208.0" r="1.2"/><circle cx="337.9" cy="193.6" r="1.2"/><circle cx="347.8" cy="190.6" r="1.2"/><circle cx="357.7" cy="188.8" r="1.2"/><circle cx="367.6" cy="188.2" r="1.2"/><circle cx="377.5" cy="188.7" r="1.2"/><circle cx="387.4" cy="190.2" r="1.2"/><circle cx="246.1" cy="267.2" r="1.2"/><circle cx="256.0" cy="258.5" r="1.2"/><circle cx="265.8" cy="250.9" r="1.2"/><circle cx="275.7" cy="243.9" r="1.2"/><circle cx="285.6" cy="237.3" r="1.2"/><circle cx="295.5" cy="230.7" r="1.2"/><circle cx="305.4" cy="224.0" r="1.2"/><circle cx="315.3" cy="217.6" r="1.2"/><circle cx="325.2" cy="211.6" r="1.2"/><circle cx="335.1" cy="206.5" r="1.2"/><circle cx="345.0" cy="202.6" r="1.2"/><circle cx="354.9" cy="200.0" r="1.2"/><circle cx="364.8" cy="198.8" r="1.2"/><circle cx="374.7" cy="198.9" r="1.2"/><circle cx="384.6" cy="199.9" r="1.2"/><circle cx="263.0" cy="268.7" r="1.2"/><circle cx="272.9" cy="262.1" r="1.2"/><circle cx="282.8" cy="255.8" r="1.2"/><circle cx="292.7" cy="249.5" r="1.2"/><circle cx="302.6" cy="243.0" r="1.2"/><circle cx="312.5" cy="236.4" r="1.2"/><circle cx="322.4" cy="230.0" r="1.2"/><circle cx="332.3" cy="224.3" r="1.2"/><circle cx="342.2" cy="219.7" r="1.2"/><circle cx="352.0" cy="216.5" r="1.2"/><circle cx="361.9" cy="214.7" r="1.2"/><circle cx="371.8" cy="214.3" r="1.2"/><circle cx="381.7" cy="214.8" r="1.2"/><circle cx="289.9" cy="268.0" r="1.2"/><circle cx="299.8" cy="261.7" r="1.2"/><circle cx="309.6" cy="255.2" r="1.2"/><circle cx="319.5" cy="248.7" r="1.2"/><circle cx="329.4" cy="242.8" r="1.2"/><circle cx="339.3" cy="237.8" r="1.2"/><circle cx="349.2" cy="234.3" r="1.2"/><circle cx="359.1" cy="232.3" r="1.2"/><circle cx="336.5" cy="255.1" r="1.2"/><circle cx="346.4" cy="250.9" r="1.2"/></g><g fill="#9db894"><circle cx="318.1" cy="202.5" r="1.2"/><circle cx="328.0" cy="197.6" r="1.2"/></g><g fill="#d6dcc0"></g></svg>
+        <canvas id="terrain" tabindex="0" aria-label="Terreno ilustrativo em nuvem de pontos. Usa as setas esquerda e direita para rodar a vista." hidden></canvas>
+        <div class="scene-top">
+          <div class="scene-label">Nuvem de pontos<small>Visualização ilustrativa</small></div>
+          <span class="scene-chip"><span class="dot"></span>Vista tridimensional</span>
+        </div>
+        <div class="scene-bottom">
+          <span class="scene-hint" hidden><svg class="icon"><use href="#i-orbit"/></svg>Arrasta para rodar</span>
+          <div class="scene-controls" hidden>
+            <div class="scene-mode" role="group" aria-label="Cor da nuvem de pontos">
+              <button type="button" data-scene-mode="shape" aria-pressed="true">Forma</button>
+              <button type="button" data-scene-mode="height" aria-pressed="false">Altitude</button>
+            </div>
+            <button class="icon-button" id="pause-scene" type="button" aria-label="Pausar animação" aria-pressed="false"><svg class="icon"><use href="#i-pause"/></svg></button>
+          </div>
+        </div>
+        <span class="scene-corner tl"></span><span class="scene-corner tr"></span><span class="scene-corner bl"></span><span class="scene-corner br"></span>
+      </div>
+    </section>
+    <div class="hero-footnote wrap">
+      <a href="https://realitymax.co/embed/XYc2l8" target="_blank" rel="noopener noreferrer" data-open="XYc2l8"><span class="featured-label">Em destaque</span>Mosteiro dos Jerónimos<svg class="icon"><use href="#i-arrow"/></svg></a>
+      <span>Observa. Explora. Descobre.</span>
+    </div>
+
+    <div class="tech-index wrap" aria-label="Índice do atlas">
+      <a class="tech-tile" href="#01" data-tech="01" data-tech-nav><div class="tile-top"><span>01 / TECNOLOGIA</span><svg class="icon"><use href="#i-aerial"/></svg></div><h2>LiDAR Aéreo</h2><div class="tile-bottom"><span><span data-tech-total="01">37</span> modelos · Território e paisagem</span><svg class="icon"><use href="#i-arrow"/></svg></div></a>
+      <a class="tech-tile" href="#02" data-tech="02" data-tech-nav><div class="tile-top"><span>02 / TECNOLOGIA</span><svg class="icon"><use href="#i-scan"/></svg></div><h2>LiDAR Terrestre</h2><div class="tile-bottom"><span><span data-tech-total="02">2</span> modelos · Espaços e detalhe</span><svg class="icon"><use href="#i-arrow"/></svg></div></a>
+      <a class="tech-tile" href="#03" data-tech="03" data-tech-nav><div class="tile-top"><span>03 / TECNOLOGIA</span><svg class="icon"><use href="#i-layers"/></svg></div><h2>Multiespectral</h2><div class="tile-bottom"><span><span data-tech-total="03">3</span> modelos · Bandas e índices</span><svg class="icon"><use href="#i-arrow"/></svg></div></a>
+      <a class="tech-tile" href="#04" data-tech="04" data-tech-nav><div class="tile-top"><span>04 / TECNOLOGIA</span><svg class="icon"><use href="#i-spectrum"/></svg></div><h2>Hiperespectral</h2><div class="tile-bottom"><span class="soon-label">Novas perspetivas, em breve</span><svg class="icon"><use href="#i-arrow"/></svg></div></a>
+    </div>
+
+    <section class="catalog wrap" id="atlas" data-view="grid" aria-labelledby="atlas-title">
+      <div class="catalog-head">
+        <div><p class="eyebrow">A coleção GEO-DS</p><h2 id="atlas-title">Um território.<br><em>Muitas perspetivas.</em></h2></div>
+        <div class="catalog-summary"><p>Uma coleção para conhecer melhor os lugares, as suas formas e o que os torna únicos.</p></div>
+      </div>
+      <noscript><p class="noscript-notice">Os modelos continuam disponíveis nos links abaixo. Ativa o JavaScript para usar a pesquisa, os filtros e o visualizador nesta página.</p></noscript>
+      <div class="catalog-toolbar" hidden>
+        <div class="toolbar-top">
+          <div class="search-box"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><label class="sr-only" for="model-search">Pesquisar modelos por nome, tecnologia ou tema</label><input id="model-search" type="search" placeholder="Pesquisar um local ou modelo…" autocomplete="off" maxlength="180" aria-controls="model-sections"><button class="search-clear" type="button" aria-label="Limpar pesquisa" hidden><svg class="icon"><use href="#i-close"/></svg></button><kbd aria-hidden="true">/</kbd></div>
+          <label class="sort-control"><svg class="icon" aria-hidden="true"><use href="#i-sort"/></svg><span class="sr-only">Ordenar modelos dentro de cada tecnologia</span><select id="model-sort"><option value="original">Ordem da coleção</option><option value="asc">Nome: A → Z</option><option value="desc">Nome: Z → A</option></select></label>
+          <div class="view-control" role="group" aria-label="Apresentação dos modelos"><button type="button" data-view="grid" aria-label="Vista em grelha" aria-pressed="true"><svg class="icon"><use href="#i-grid"/></svg></button><button type="button" data-view="list" aria-label="Vista em lista" aria-pressed="false"><svg class="icon"><use href="#i-list"/></svg></button></div>
+        </div>
+        <div class="toolbar-bottom">
+          <div class="filters" role="group" aria-label="Filtrar por tecnologia">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true">Todos os modelos<small data-total-models>42</small></button>
+            <button class="filter" type="button" data-filter="01" data-tech="01" aria-pressed="false"><span class="dot"></span>LiDAR Aéreo<small data-tech-total="01">37</small></button>
+            <button class="filter" type="button" data-filter="02" data-tech="02" aria-pressed="false"><span class="dot"></span>LiDAR Terrestre<small data-tech-total="02">2</small></button>
+            <button class="filter" type="button" data-filter="03" data-tech="03" aria-pressed="false"><span class="dot"></span>Multiespectral<small data-tech-total="03">3</small></button>
+            <button class="filter" type="button" data-filter="04" data-tech="04" aria-pressed="false"><span class="dot"></span>Hiperespectral<small>Em breve</small></button>
+          </div>
+          <span class="results-count" id="results-count" role="status" aria-live="polite" aria-atomic="true">42 modelos</span>
+        </div>
+      </div>
+      <div id="model-sections">
+        <section class="technology" id="01" data-section="01" aria-labelledby="heading-01">
+        <div class="section-head"><div class="section-heading"><span class="section-number">01</span><h3 id="heading-01">LiDAR Aéreo</h3><span class="section-count">37</span></div><p class="section-description">Captura do território a partir do céu. Nuvens de pontos, modelos digitais de elevação e paisagem.</p></div>
+        <div class="models-grid"><article class="model-card reveal" data-model="R0zTic" data-tech="01" data-search="Antiga Mina do Rosalgar LiDAR Aéreo Mineração e geologia" style="--fallback-angle:-17deg;--fallback-x:42%">
+          <a class="card-link" href="https://realitymax.co/embed/R0zTic" target="_blank" rel="noopener noreferrer" data-open="R0zTic" aria-label="Explorar Antiga Mina do Rosalgar em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/rosalgar.png" alt="Antiga Mina do Rosalgar" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.01</span></div><h4>Antiga Mina do Rosalgar</h4><div class="card-bottom"><span>Mineração e geologia</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="jLCHmm" data-tech="01" data-search="Mosteiro dos Jerónimos (Igreja) LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-4deg;--fallback-x:59%">
+          <a class="card-link" href="https://realitymax.co/embed/jLCHmm" target="_blank" rel="noopener noreferrer" data-open="jLCHmm" aria-label="Explorar Mosteiro dos Jerónimos (Igreja) em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/jeronimos_igreja.png" alt="Mosteiro dos Jerónimos (Igreja)" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.02</span></div><h4>Mosteiro dos Jerónimos (Igreja)</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="XYc2l8" data-tech="01" data-search="Mosteiro dos Jerónimos LiDAR Aéreo Património e arquitetura" style="--fallback-angle:9deg;--fallback-x:26%">
+          <a class="card-link" href="https://realitymax.co/embed/XYc2l8" target="_blank" rel="noopener noreferrer" data-open="XYc2l8" aria-label="Explorar Mosteiro dos Jerónimos em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/jeronimos.png" alt="Mosteiro dos Jerónimos" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.03</span></div><h4>Mosteiro dos Jerónimos</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="vamtzR" data-tech="01" data-search="Mosteiro de Alcobaça e Zona Envolvente LiDAR Aéreo Património e arquitetura" style="--fallback-angle:22deg;--fallback-x:43%">
+          <a class="card-link" href="https://realitymax.co/embed/vamtzR" target="_blank" rel="noopener noreferrer" data-open="vamtzR" aria-label="Explorar Mosteiro de Alcobaça e Zona Envolvente em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/alcobaca_envolvente.png" alt="Mosteiro de Alcobaça e Zona Envolvente" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.04</span></div><h4>Mosteiro de Alcobaça e Zona Envolvente</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="D1xVtm" data-tech="01" data-search="Mosteiro de Alcobaça LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-25deg;--fallback-x:60%">
+          <a class="card-link" href="https://realitymax.co/embed/D1xVtm" target="_blank" rel="noopener noreferrer" data-open="D1xVtm" aria-label="Explorar Mosteiro de Alcobaça em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/alcobaca.png" alt="Mosteiro de Alcobaça" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.05</span></div><h4>Mosteiro de Alcobaça</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="V6DR7P" data-tech="01" data-search="Villa Romana de Pisões LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-12deg;--fallback-x:27%">
+          <a class="card-link" href="https://realitymax.co/embed/V6DR7P" target="_blank" rel="noopener noreferrer" data-open="V6DR7P" aria-label="Explorar Villa Romana de Pisões em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/pisoes.png" alt="Villa Romana de Pisões" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.06</span></div><h4>Villa Romana de Pisões</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="1_KJJO" data-tech="01" data-search="Castelo de Évoramonte LiDAR Aéreo Património e arquitetura" style="--fallback-angle:1deg;--fallback-x:44%">
+          <a class="card-link" href="https://realitymax.co/embed/1_KJJO" target="_blank" rel="noopener noreferrer" data-open="1_KJJO" aria-label="Explorar Castelo de Évoramonte em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/castelo_evoramonte.png" alt="Castelo de Évoramonte" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.07</span></div><h4>Castelo de Évoramonte</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="CT3Q_L" data-tech="01" data-search="Castelo de Estremoz LiDAR Aéreo Património e arquitetura" style="--fallback-angle:14deg;--fallback-x:61%">
+          <a class="card-link" href="https://realitymax.co/embed/CT3Q_L" target="_blank" rel="noopener noreferrer" data-open="CT3Q_L" aria-label="Explorar Castelo de Estremoz em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/castelo_estremoz.png" alt="Castelo de Estremoz" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.08</span></div><h4>Castelo de Estremoz</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="Mq47SP" data-tech="01" data-search="Convento das Maltezas LiDAR Aéreo Património e arquitetura" style="--fallback-angle:27deg;--fallback-x:28%">
+          <a class="card-link" href="https://realitymax.co/embed/Mq47SP" target="_blank" rel="noopener noreferrer" data-open="Mq47SP" aria-label="Explorar Convento das Maltezas em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/maltezas_estremoz.png" alt="Convento das Maltezas" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.09</span></div><h4>Convento das Maltezas</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="bq4S3c" data-tech="01" data-search="Milreu – Modelo Geral LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-20deg;--fallback-x:45%">
+          <a class="card-link" href="https://realitymax.co/embed/bq4S3c" target="_blank" rel="noopener noreferrer" data-open="bq4S3c" aria-label="Explorar Milreu – Modelo Geral em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/milreu.png" alt="Milreu – Modelo Geral" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.10</span></div><h4>Milreu – Modelo Geral</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="rR0l2K" data-tech="01" data-search="Templo Romano LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-7deg;--fallback-x:62%">
+          <a class="card-link" href="https://realitymax.co/embed/rR0l2K" target="_blank" rel="noopener noreferrer" data-open="rR0l2K" aria-label="Explorar Templo Romano em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/templo_milreu.png" alt="Templo Romano" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.11</span></div><h4>Templo Romano</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="VnCqEI" data-tech="01" data-search="Termas – Frigidarium LiDAR Aéreo Património e arquitetura" style="--fallback-angle:6deg;--fallback-x:29%">
+          <a class="card-link" href="https://realitymax.co/embed/VnCqEI" target="_blank" rel="noopener noreferrer" data-open="VnCqEI" aria-label="Explorar Termas – Frigidarium em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/termas_milreu.png" alt="Termas – Frigidarium" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.12</span></div><h4>Termas – Frigidarium</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="Hyw4nY" data-tech="01" data-search="Ruínas Romanas de Tróia LiDAR Aéreo Património e arquitetura" style="--fallback-angle:19deg;--fallback-x:46%">
+          <a class="card-link" href="https://realitymax.co/embed/Hyw4nY" target="_blank" rel="noopener noreferrer" data-open="Hyw4nY" aria-label="Explorar Ruínas Romanas de Tróia em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/ruinas_troia.png" alt="Ruínas Romanas de Tróia" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.13</span></div><h4>Ruínas Romanas de Tróia</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="6GhAOs" data-tech="01" data-search="Aula/Basílica de Tróia LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-28deg;--fallback-x:63%">
+          <a class="card-link" href="https://realitymax.co/embed/6GhAOs" target="_blank" rel="noopener noreferrer" data-open="6GhAOs" aria-label="Explorar Aula/Basílica de Tróia em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/aula_troia.png" alt="Aula/Basílica de Tróia" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.14</span></div><h4>Aula/Basílica de Tróia</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="t2RBAM" data-tech="01" data-search="Alcácer do Sal LiDAR Aéreo Território e paisagem" style="--fallback-angle:-15deg;--fallback-x:30%">
+          <a class="card-link" href="https://realitymax.co/embed/t2RBAM" target="_blank" rel="noopener noreferrer" data-open="t2RBAM" aria-label="Explorar Alcácer do Sal em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/alcacer.png" alt="Alcácer do Sal" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.15</span></div><h4>Alcácer do Sal</h4><div class="card-bottom"><span>Território e paisagem</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="pniwbO" data-tech="01" data-search="Castelo de Alcácer do Sal LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-2deg;--fallback-x:47%">
+          <a class="card-link" href="https://realitymax.co/embed/pniwbO" target="_blank" rel="noopener noreferrer" data-open="pniwbO" aria-label="Explorar Castelo de Alcácer do Sal em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/alcacer_castelo.png" alt="Castelo de Alcácer do Sal" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.16</span></div><h4>Castelo de Alcácer do Sal</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="AIvKQT" data-tech="01" data-search="Zona Arqueológica da Enchurrasqueira LiDAR Aéreo Património e arquitetura" style="--fallback-angle:11deg;--fallback-x:64%">
+          <a class="card-link" href="https://realitymax.co/embed/AIvKQT" target="_blank" rel="noopener noreferrer" data-open="AIvKQT" aria-label="Explorar Zona Arqueológica da Enchurrasqueira em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/enchurrasqueira.png" alt="Zona Arqueológica da Enchurrasqueira" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.17</span></div><h4>Zona Arqueológica da Enchurrasqueira</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="yL4nus" data-tech="01" data-search="Zona Arqueológica da Barrosinha LiDAR Aéreo Património e arquitetura" style="--fallback-angle:24deg;--fallback-x:31%">
+          <a class="card-link" href="https://realitymax.co/embed/yL4nus" target="_blank" rel="noopener noreferrer" data-open="yL4nus" aria-label="Explorar Zona Arqueológica da Barrosinha em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/barrosinha.png" alt="Zona Arqueológica da Barrosinha" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.18</span></div><h4>Zona Arqueológica da Barrosinha</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="6T0uEk" data-tech="01" data-search="Zona Arqueológica do Bugio LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-23deg;--fallback-x:48%">
+          <a class="card-link" href="https://realitymax.co/embed/6T0uEk" target="_blank" rel="noopener noreferrer" data-open="6T0uEk" aria-label="Explorar Zona Arqueológica do Bugio em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/bugio.png" alt="Zona Arqueológica do Bugio" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.19</span></div><h4>Zona Arqueológica do Bugio</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="LuIPE3" data-tech="01" data-search="Zona Arqueológica do Porto de Lama LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-10deg;--fallback-x:65%">
+          <a class="card-link" href="https://realitymax.co/embed/LuIPE3" target="_blank" rel="noopener noreferrer" data-open="LuIPE3" aria-label="Explorar Zona Arqueológica do Porto de Lama em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/porto_de_lama.png" alt="Zona Arqueológica do Porto de Lama" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.20</span></div><h4>Zona Arqueológica do Porto de Lama</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="aczrAu" data-tech="01" data-search="Cais Palafítico da Carrasqueira LiDAR Aéreo Património e arquitetura" style="--fallback-angle:3deg;--fallback-x:32%">
+          <a class="card-link" href="https://realitymax.co/embed/aczrAu" target="_blank" rel="noopener noreferrer" data-open="aczrAu" aria-label="Explorar Cais Palafítico da Carrasqueira em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/cais_palafitico_carrasqueira.png" alt="Cais Palafítico da Carrasqueira" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.21</span></div><h4>Cais Palafítico da Carrasqueira</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="j_tSQC" data-tech="01" data-search="Antiga Mina — Vale da Arca LiDAR Aéreo Mineração e geologia" style="--fallback-angle:16deg;--fallback-x:49%">
+          <a class="card-link" href="https://realitymax.co/embed/j_tSQC" target="_blank" rel="noopener noreferrer" data-open="j_tSQC" aria-label="Explorar Antiga Mina — Vale da Arca em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/vale_arca.png" alt="Antiga Mina — Vale da Arca" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.22</span></div><h4>Antiga Mina — Vale da Arca</h4><div class="card-bottom"><span>Mineração e geologia</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="0sJMNt" data-tech="01" data-search="Vale da Arca — DEM LiDAR Aéreo Mineração e geologia" style="--fallback-angle:29deg;--fallback-x:66%">
+          <a class="card-link" href="https://realitymax.co/embed/0sJMNt" target="_blank" rel="noopener noreferrer" data-open="0sJMNt" aria-label="Explorar Vale da Arca — DEM em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/vale_arca_dem.png" alt="Vale da Arca — DEM" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.23</span></div><h4>Vale da Arca — DEM</h4><div class="card-bottom"><span>Mineração e geologia</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="famzUR" data-tech="01" data-search="Vale da Arca — Detalhe LiDAR Aéreo Mineração e geologia" style="--fallback-angle:-18deg;--fallback-x:33%">
+          <a class="card-link" href="https://realitymax.co/embed/famzUR" target="_blank" rel="noopener noreferrer" data-open="famzUR" aria-label="Explorar Vale da Arca — Detalhe em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/vale_arca_dem_detalhe.png" alt="Vale da Arca — Detalhe" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.24</span></div><h4>Vale da Arca — Detalhe</h4><div class="card-bottom"><span>Mineração e geologia</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="rs8NJd" data-tech="01" data-search="Modelo 3D + Vegetação com o Modelo Digital de Elevação LiDAR Aéreo Território e classificação" style="--fallback-angle:-5deg;--fallback-x:50%">
+          <a class="card-link" href="https://realitymax.co/embed/rs8NJd" target="_blank" rel="noopener noreferrer" data-open="rs8NJd" aria-label="Explorar Modelo 3D + Vegetação com o Modelo Digital de Elevação em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/modelo3d_modelo_elevação.png" alt="Modelo 3D + Vegetação com o Modelo Digital de Elevação" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.25</span></div><h4>Modelo 3D + Vegetação com o Modelo Digital de Elevação</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="IrYTBe" data-tech="01" data-search="Modelo 3D + Vegetação com o Modelo Digital de Terreno LiDAR Aéreo Território e classificação" style="--fallback-angle:8deg;--fallback-x:67%">
+          <a class="card-link" href="https://realitymax.co/embed/IrYTBe" target="_blank" rel="noopener noreferrer" data-open="IrYTBe" aria-label="Explorar Modelo 3D + Vegetação com o Modelo Digital de Terreno em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/modelo3d_modelo_terreno.png" alt="Modelo 3D + Vegetação com o Modelo Digital de Terreno" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.26</span></div><h4>Modelo 3D + Vegetação com o Modelo Digital de Terreno</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="_Siw8t" data-tech="01" data-search="Vegetação com o Modelo Digital de Terreno LiDAR Aéreo Território e classificação" style="--fallback-angle:21deg;--fallback-x:34%">
+          <a class="card-link" href="https://realitymax.co/embed/_Siw8t" target="_blank" rel="noopener noreferrer" data-open="_Siw8t" aria-label="Explorar Vegetação com o Modelo Digital de Terreno em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/vegetação_modelo_terreno.png" alt="Vegetação com o Modelo Digital de Terreno" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.27</span></div><h4>Vegetação com o Modelo Digital de Terreno</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="H81lCA" data-tech="01" data-search="Edifícios com Modelo Digital de Terreno LiDAR Aéreo Território e classificação" style="--fallback-angle:-26deg;--fallback-x:51%">
+          <a class="card-link" href="https://realitymax.co/embed/H81lCA" target="_blank" rel="noopener noreferrer" data-open="H81lCA" aria-label="Explorar Edifícios com Modelo Digital de Terreno em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/edificios_modelo_terreno.png" alt="Edifícios com Modelo Digital de Terreno" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.28</span></div><h4>Edifícios com Modelo Digital de Terreno</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="Bv3H1v" data-tech="01" data-search="Ruas e Chão com Modelo Digital de Terreno LiDAR Aéreo Território e classificação" style="--fallback-angle:-13deg;--fallback-x:68%">
+          <a class="card-link" href="https://realitymax.co/embed/Bv3H1v" target="_blank" rel="noopener noreferrer" data-open="Bv3H1v" aria-label="Explorar Ruas e Chão com Modelo Digital de Terreno em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/evora_ruas_chao_terreno.png" alt="Ruas e Chão com Modelo Digital de Terreno" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.29</span></div><h4>Ruas e Chão com Modelo Digital de Terreno</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="SuBdRO" data-tech="01" data-search="Carros com Modelo Digital de Terreno LiDAR Aéreo Território e classificação" style="--fallback-angle:0deg;--fallback-x:35%">
+          <a class="card-link" href="https://realitymax.co/embed/SuBdRO" target="_blank" rel="noopener noreferrer" data-open="SuBdRO" aria-label="Explorar Carros com Modelo Digital de Terreno em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/carros_modelo_terreno.png" alt="Carros com Modelo Digital de Terreno" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.30</span></div><h4>Carros com Modelo Digital de Terreno</h4><div class="card-bottom"><span>Território e classificação</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="fPPJ3_" data-tech="01" data-search="Colégio do Espírito Santo LiDAR Aéreo Património e arquitetura" style="--fallback-angle:13deg;--fallback-x:52%">
+          <a class="card-link" href="https://realitymax.co/embed/fPPJ3_" target="_blank" rel="noopener noreferrer" data-open="fPPJ3_" aria-label="Explorar Colégio do Espírito Santo em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/colegio_espirito_santo.png" alt="Colégio do Espírito Santo" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.31</span></div><h4>Colégio do Espírito Santo</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="34U2Ot" data-tech="01" data-search="Escola de Ciências e Tecnologia (ECT) LiDAR Aéreo Património e arquitetura" style="--fallback-angle:26deg;--fallback-x:69%">
+          <a class="card-link" href="https://realitymax.co/embed/34U2Ot" target="_blank" rel="noopener noreferrer" data-open="34U2Ot" aria-label="Explorar Escola de Ciências e Tecnologia (ECT) em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/ECT.png" alt="Escola de Ciências e Tecnologia (ECT)" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.32</span></div><h4>Escola de Ciências e Tecnologia (ECT)</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="uGUIqd" data-tech="01" data-search="Sé de Évora LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-21deg;--fallback-x:36%">
+          <a class="card-link" href="https://realitymax.co/embed/uGUIqd" target="_blank" rel="noopener noreferrer" data-open="uGUIqd" aria-label="Explorar Sé de Évora em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/se_museu.png" alt="Sé de Évora" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.33</span></div><h4>Sé de Évora</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="2Trmyl" data-tech="01" data-search="Templo de Diana LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-8deg;--fallback-x:53%">
+          <a class="card-link" href="https://realitymax.co/embed/2Trmyl" target="_blank" rel="noopener noreferrer" data-open="2Trmyl" aria-label="Explorar Templo de Diana em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/templos_diana.png" alt="Templo de Diana" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.34</span></div><h4>Templo de Diana</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="fxdIzp" data-tech="01" data-search="Palácio D. Manuel LiDAR Aéreo Património e arquitetura" style="--fallback-angle:5deg;--fallback-x:70%">
+          <a class="card-link" href="https://realitymax.co/embed/fxdIzp" target="_blank" rel="noopener noreferrer" data-open="fxdIzp" aria-label="Explorar Palácio D. Manuel em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/palacio_manuel.png" alt="Palácio D. Manuel" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.35</span></div><h4>Palácio D. Manuel</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="c3YK0Z" data-tech="01" data-search="Igreja de São Francisco LiDAR Aéreo Património e arquitetura" style="--fallback-angle:18deg;--fallback-x:37%">
+          <a class="card-link" href="https://realitymax.co/embed/c3YK0Z" target="_blank" rel="noopener noreferrer" data-open="c3YK0Z" aria-label="Explorar Igreja de São Francisco em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/igreja_sao_francisco.png" alt="Igreja de São Francisco" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.36</span></div><h4>Igreja de São Francisco</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="b_0FSX" data-tech="01" data-search="Mosteiro de Santa Clara-a-Velha LiDAR Aéreo Património e arquitetura" style="--fallback-angle:-29deg;--fallback-x:54%">
+          <a class="card-link" href="https://realitymax.co/embed/b_0FSX" target="_blank" rel="noopener noreferrer" data-open="b_0FSX" aria-label="Explorar Mosteiro de Santa Clara-a-Velha em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/mosteiro_santa_clara.png" alt="Mosteiro de Santa Clara-a-Velha" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Aéreo</span><span class="card-number">01.37</span></div><h4>Mosteiro de Santa Clara-a-Velha</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article></div>
+      </section>
+<section class="technology" id="02" data-section="02" aria-labelledby="heading-02">
+        <div class="section-head"><div class="section-heading"><span class="section-number">02</span><h3 id="heading-02">LiDAR Terrestre</h3><span class="section-count">02</span></div><p class="section-description">Precisão milimétrica para explorar património, interiores e espaços históricos.</p></div>
+        <div class="models-grid"><article class="model-card reveal" data-model="A_VnFv" data-tech="02" data-search="Gruta do Escoural LiDAR Terrestre Património e arquitetura" style="--fallback-angle:-17deg;--fallback-x:42%">
+          <a class="card-link" href="https://realitymax.co/embed/A_VnFv" target="_blank" rel="noopener noreferrer" data-open="A_VnFv" aria-label="Explorar Gruta do Escoural em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/gruta_escoural.png" alt="Gruta do Escoural" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Terrestre</span><span class="card-number">02.01</span></div><h4>Gruta do Escoural</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="aeKMDu" data-tech="02" data-search="Mosteiro de Santa Clara-a-Velha – Interior e Sensores LiDAR Terrestre Património e arquitetura" style="--fallback-angle:-4deg;--fallback-x:59%">
+          <a class="card-link" href="https://realitymax.co/embed/aeKMDu" target="_blank" rel="noopener noreferrer" data-open="aeKMDu" aria-label="Explorar Mosteiro de Santa Clara-a-Velha – Interior e Sensores em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/mosteiro_santa_clara_interiores_sensores.png" alt="Mosteiro de Santa Clara-a-Velha – Interior e Sensores" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">LiDAR Terrestre</span><span class="card-number">02.02</span></div><h4>Mosteiro de Santa Clara-a-Velha – Interior e Sensores</h4><div class="card-bottom"><span>Património e arquitetura</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article></div>
+      </section>
+<section class="technology" id="03" data-section="03" aria-labelledby="heading-03">
+        <div class="section-head"><div class="section-heading"><span class="section-number">03</span><h3 id="heading-03">Multiespectral</h3><span class="section-count">03</span></div><p class="section-description">Bandas e índices que revelam padrões invisíveis numa imagem convencional.</p></div>
+        <div class="models-grid"><article class="model-card reveal" data-model="qQopkC" data-tech="03" data-search="NDVI - Pradaria de Tróia Multiespectral Paisagem e ambiente" style="--fallback-angle:-17deg;--fallback-x:42%">
+          <a class="card-link" href="https://realitymax.co/embed/qQopkC" target="_blank" rel="noopener noreferrer" data-open="qQopkC" aria-label="Explorar NDVI - Pradaria de Tróia em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/ndvi_pradaria_troia.png" alt="NDVI - Pradaria de Tróia" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">Multiespectral</span><span class="card-number">03.01</span></div><h4>NDVI - Pradaria de Tróia</h4><div class="card-bottom"><span>Paisagem e ambiente</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="Vlm_yE" data-tech="03" data-search="Tapada de Coelheiros Multiespectral Paisagem e ambiente" style="--fallback-angle:-4deg;--fallback-x:59%">
+          <a class="card-link" href="https://realitymax.co/embed/Vlm_yE" target="_blank" rel="noopener noreferrer" data-open="Vlm_yE" aria-label="Explorar Tapada de Coelheiros em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/tapada_coelheiros.png" alt="Tapada de Coelheiros" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">Multiespectral</span><span class="card-number">03.02</span></div><h4>Tapada de Coelheiros</h4><div class="card-bottom"><span>Paisagem e ambiente</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article><article class="model-card reveal" data-model="h_YxUz" data-tech="03" data-search="Distribuição de As e Cu na Antiga Mina de Trimpancho Multiespectral Geoquímica" style="--fallback-angle:9deg;--fallback-x:26%">
+          <a class="card-link" href="https://realitymax.co/embed/h_YxUz" target="_blank" rel="noopener noreferrer" data-open="h_YxUz" aria-label="Explorar Distribuição de As e Cu na Antiga Mina de Trimpancho em 3D">
+            <div class="card-media">
+              <div class="thumb-fallback" aria-hidden="true"><svg viewBox="0 0 400 250"><use href="#contours"/></svg><svg class="icon"><use href="#i-cube"/></svg><span>Miniatura indisponível</span></div>
+              <img src="images/au_cu_trimapancho.png" alt="Distribuição de As e Cu na Antiga Mina de Trimpancho" loading="lazy" decoding="async" width="960" height="600">
+              <span class="media-badge" aria-hidden="true"><svg class="icon"><use href="#i-cube"/></svg>3D</span>
+              <span class="card-hover" aria-hidden="true"><span>Explorar em 3D</span><svg class="icon"><use href="#i-arrow"/></svg></span>
+            </div>
+            <div class="card-info"><div class="card-meta"><span class="card-tech">Multiespectral</span><span class="card-number">03.03</span></div><h4>Distribuição de As e Cu na Antiga Mina de Trimpancho</h4><div class="card-bottom"><span>Geoquímica</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></div></div>
+          </a>
+        </article></div>
+      </section>
+        <section class="technology" id="04" data-section="04" aria-labelledby="heading-04">
+          <div class="section-head"><div class="section-heading"><span class="section-number">04</span><h3 id="heading-04">Hiperespectral</h3><span class="section-count">Em breve</span></div><p class="section-description">Ver o invisível através da assinatura espectral da matéria.</p></div>
+          <div class="coming-soon reveal">
+            <div><span class="mono"><span class="dot" style="--accent:var(--purple)"></span>Em preparação</span><h4>O invisível também<br>tem uma <em>assinatura.</em></h4><p>Os primeiros modelos hiperespectrais estão a ser preparados. Uma nova forma de explorar os materiais, banda a banda.</p></div>
+            <div class="spectral-art" aria-hidden="true"><i style="--h:65px;--band:hsl(205 32% 66%)"></i><i style="--h:92px;--band:hsl(209 32% 66%)"></i><i style="--h:112px;--band:hsl(212 32% 66%)"></i><i style="--h:124px;--band:hsl(216 32% 66%)"></i><i style="--h:126px;--band:hsl(219 32% 66%)"></i><i style="--h:124px;--band:hsl(223 32% 66%)"></i><i style="--h:122px;--band:hsl(227 32% 66%)"></i><i style="--h:125px;--band:hsl(230 32% 66%)"></i><i style="--h:134px;--band:hsl(234 32% 66%)"></i><i style="--h:145px;--band:hsl(237 32% 66%)"></i><i style="--h:153px;--band:hsl(241 32% 66%)"></i><i style="--h:152px;--band:hsl(245 32% 66%)"></i><i style="--h:141px;--band:hsl(248 32% 66%)"></i><i style="--h:121px;--band:hsl(252 32% 66%)"></i><i style="--h:95px;--band:hsl(255 32% 66%)"></i><i style="--h:72px;--band:hsl(259 32% 66%)"></i><i style="--h:55px;--band:hsl(263 32% 66%)"></i><i style="--h:61px;--band:hsl(266 32% 66%)"></i><i style="--h:88px;--band:hsl(270 32% 66%)"></i><i style="--h:113px;--band:hsl(273 32% 66%)"></i><i style="--h:132px;--band:hsl(277 32% 66%)"></i><i style="--h:140px;--band:hsl(281 32% 66%)"></i><i style="--h:139px;--band:hsl(284 32% 66%)"></i><i style="--h:133px;--band:hsl(288 32% 66%)"></i><i style="--h:128px;--band:hsl(291 32% 66%)"></i><i style="--h:127px;--band:hsl(295 32% 66%)"></i><i style="--h:132px;--band:hsl(299 32% 66%)"></i><i style="--h:139px;--band:hsl(302 32% 66%)"></i><i style="--h:143px;--band:hsl(306 32% 66%)"></i></div>
+          </div>
+        </section>
+      </div>
+      <div class="empty-state" hidden><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><h3>Ainda não encontrámos esse lugar.</h3><p>Experimenta outro nome ou explora todas as tecnologias.</p><button class="button" type="button" id="reset-filters">Ver todos os modelos<svg class="icon"><use href="#i-right"/></svg></button></div>
+    </section>
+
+    <section class="guide wrap" id="como-explorar" aria-labelledby="guide-title">
+      <div class="guide-intro"><h2 id="guide-title">A exploração<br>começa contigo.</h2><p>Um atlas para percorrer ao teu ritmo.</p></div>
+      <div class="guide-step"><span class="mono">01</span><h3>Encontra um lugar</h3><p>Procura um nome ou escolhe uma tecnologia para descobrir a coleção.</p></div>
+      <div class="guide-step"><span class="mono">02</span><h3>Entra no modelo</h3><p>Seleciona um modelo para abrir a sua vista interativa e observar os detalhes.</p></div>
+      <div class="guide-step"><span class="mono">03</span><h3>Muda de perspetiva</h3><p>Roda a vista, aproxima-te e explora. Também podes abrir o modelo numa nova janela.</p></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-inner wrap"><div class="footer-name">GEO-DS LAB<span>Universidade de Évora</span></div><span class="footer-note">Atlas digital do território</span><a class="back-top" href="#top">Voltar ao início<svg class="icon"><use href="#i-up"/></svg></a></div></footer>
+
+  <dialog class="viewer-dialog" id="model-dialog" aria-labelledby="viewer-title">
+    <div class="viewer-head"><div><span class="mono" id="viewer-technology"></span><h2 id="viewer-title">Explorar modelo</h2></div><div class="viewer-actions"><button class="icon-button" id="viewer-fullscreen" type="button" aria-label="Abrir visualizador em ecrã inteiro"><svg class="icon"><use href="#i-expand"/></svg></button><button class="icon-button" id="viewer-close" type="button" aria-label="Fechar visualizador"><svg class="icon"><use href="#i-close"/></svg></button></div></div>
+    <div class="viewer-stage"><div id="iframe-mount" style="height:100%"></div><div class="viewer-loading" role="status"><div class="spinner" aria-hidden="true"></div><p>A abrir o visualizador…</p><div class="viewer-slow" hidden>O modelo está a demorar a responder.<br><a id="viewer-slow-link" href="https://realitymax.co" target="_blank" rel="noopener noreferrer">Abrir numa nova janela ↗</a></div></div></div>
+    <div class="viewer-foot"><div class="viewer-pager"><button class="icon-button" id="viewer-prev" type="button" aria-label="Modelo anterior"><svg class="icon"><use href="#i-left"/></svg></button><span class="viewer-position" id="viewer-position"></span><button class="icon-button" id="viewer-next" type="button" aria-label="Modelo seguinte"><svg class="icon"><use href="#i-right"/></svg></button></div><span class="viewer-tip">Explora o modelo com o rato ou através do toque.</span><a class="viewer-external" id="viewer-external" href="https://realitymax.co" target="_blank" rel="noopener noreferrer">Abrir numa nova janela<svg class="icon"><use href="#i-arrow"/></svg></a></div>
+  </dialog>
+
+  <script>
+  (() => {
+    'use strict';
+    const $ = (selector, parent = document) => parent.querySelector(selector);
+    const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const scrollBehavior = () => motionQuery.matches ? 'auto' : 'smooth';
+    const normalise = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-PT');
+    const catalog = $('#atlas');
+    const search = $('#model-search');
+    const clearSearch = $('.search-clear');
+    const sort = $('#model-sort');
+    const sections = $$('[data-section]');
+    const cards = $$('.model-card');
+    const models = cards.map((card, order) => ({ card, order, id: card.dataset.model, tech: card.dataset.tech, title: $('h4', card).textContent.trim(), url: $('.card-link', card).href, label: $('.card-tech', card).textContent.trim(), search: normalise(card.dataset.search) }));
+    const modelById = new Map(models.map(model => [model.id, model]));
+    let activeTech = 'all';
+    let visibleModels = [...models];
+    const collator = new Intl.Collator('pt-PT', { sensitivity: 'base', numeric: true });
+
+    /* O catálogo permanece utilizável sem JavaScript; os controlos são progressivos. */
+    $('.catalog-toolbar').hidden = false;
+    $$('.menu-toggle').forEach(el => el.hidden = false);
+    $$('[data-total-models]').forEach(el => el.textContent = models.length);
+    $$('[data-tech-total]').forEach(el => el.textContent = models.filter(model => model.tech === el.dataset.techTotal).length);
+
+    const logo = $('.brand-image');
+    const showLogo = () => { if (logo.naturalWidth) $('.brand').dataset.logo = 'loaded'; };
+    logo.addEventListener('load', showLogo);
+    if (logo.complete) showLogo();
+    $$('.card-media img').forEach(img => {
+      const check = () => { if (!img.naturalWidth) img.hidden = true; };
+      img.addEventListener('error', check);
+      if (img.complete) check();
+    });
+
+    let revealObserver;
+    if ('IntersectionObserver' in window && !motionQuery.matches) {
+      revealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+      }), { rootMargin: '80px 0px', threshold: .04 });
+      document.documentElement.classList.add('js');
+      $$('.reveal').forEach(el => revealObserver.observe(el));
+    }
+    const revealVisibleCards = () => cards.forEach(card => {
+      if (!card.hidden && card.getBoundingClientRect().top < window.innerHeight + 80) card.classList.add('is-visible');
+    });
+
+    function applyFilters() {
+      const terms = normalise(search.value.trim()).split(/\s+/).filter(Boolean);
+      visibleModels = models.filter(model => {
+        const match = (activeTech === 'all' || model.tech === activeTech) && terms.every(term => model.search.includes(term));
+        model.card.hidden = !match;
+        return match;
+      });
+      for (const section of sections) {
+        const found = visibleModels.filter(model => model.tech === section.dataset.section).length;
+        const preparing = section.dataset.section === '04' && !terms.length && (activeTech === 'all' || activeTech === '04');
+        section.hidden = !found && !preparing;
+        const count = $('.section-count', section);
+        if (section.dataset.section !== '04') count.textContent = String(found).padStart(2, '0');
+      }
+      const preparingOnly = activeTech === '04' && !terms.length;
+      $('.empty-state').hidden = visibleModels.length > 0 || preparingOnly;
+      $('#results-count').textContent = preparingOnly ? 'Modelos em preparação' : `${visibleModels.length} ${visibleModels.length === 1 ? 'modelo' : 'modelos'}${terms.length || activeTech !== 'all' ? ` de ${models.length}` : ''}`;
+      clearSearch.hidden = !search.value;
+      $$('[data-filter]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.filter === activeTech)));
+      $$('.nav-links [data-tech-nav]').forEach(el => {
+        if (el.dataset.tech === activeTech) el.setAttribute('aria-current', 'true');
+        else el.removeAttribute('aria-current');
+      });
+      reorder();
+      revealVisibleCards();
+    }
+    function reorder() {
+      const compare = sort.value === 'original' ? (a, b) => a.order - b.order : (a, b) => collator.compare(a.title, b.title) * (sort.value === 'desc' ? -1 : 1);
+      sections.forEach(section => {
+        const grid = $('.models-grid', section);
+        if (grid) models.filter(model => model.tech === section.dataset.section).sort(compare).forEach(model => grid.append(model.card));
+      });
+      visibleModels.sort((a, b) => a.tech.localeCompare(b.tech) || compare(a, b));
+    }
+    search.addEventListener('input', applyFilters);
+    sort.addEventListener('change', () => { reorder(); revealVisibleCards(); });
+    clearSearch.addEventListener('click', () => { search.value = ''; applyFilters(); search.focus(); });
+    $$('[data-filter]').forEach(button => button.addEventListener('click', () => {
+      activeTech = button.dataset.filter;
+      applyFilters();
+      /* Reposiciona a barra quando um filtro é escolhido muito abaixo na coleção. */
+      if (catalog.getBoundingClientRect().top < -180) $('.catalog-toolbar').scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+    }));
+    $('#reset-filters').addEventListener('click', () => { activeTech = 'all'; search.value = ''; applyFilters(); search.focus(); });
+    $$('[data-view]').filter(el => el.tagName === 'BUTTON').forEach(button => button.addEventListener('click', () => {
+      catalog.dataset.view = button.dataset.view;
+      $$('.view-control button').forEach(el => el.setAttribute('aria-pressed', String(el === button)));
+      revealVisibleCards();
+    }));
+
+    const menuToggle = $('.menu-toggle');
+    const nav = $('#main-nav');
+    function closeMenu() { nav.classList.remove('is-open'); menuToggle.setAttribute('aria-expanded', 'false'); menuToggle.setAttribute('aria-label', 'Abrir menu'); }
+    menuToggle.addEventListener('click', () => {
+      const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+      nav.classList.toggle('is-open', open); menuToggle.setAttribute('aria-expanded', String(open)); menuToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    });
+    document.addEventListener('click', event => { if (!event.target.closest('.site-header')) closeMenu(); });
+    $('.brand').addEventListener('click', closeMenu);
+    $$('[data-tech-nav]').forEach(link => link.addEventListener('click', event => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault(); activeTech = link.dataset.tech; search.value = ''; applyFilters(); closeMenu();
+      document.getElementById(activeTech).scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+      try { history.replaceState(null, '', `#${activeTech}`); } catch (_) { /* file:// também funciona. */ }
+    }));
+
+    /* Modal: nunca mantém vários contextos WebGL abertos. */
+    const dialog = $('#model-dialog');
+    const mount = $('#iframe-mount');
+    const loading = $('.viewer-loading');
+    let viewerModels = [];
+    let viewerIndex = 0;
+    let opener = null;
+    let loadTimeout;
+    let viewerGeneration = 0;
+    function showModel(index) {
+      const model = viewerModels[index];
+      if (!model) return;
+      viewerIndex = index;
+      const generation = ++viewerGeneration;
+      clearTimeout(loadTimeout);
+      mount.replaceChildren();
+      $('#viewer-title').textContent = model.title;
+      $('#viewer-technology').textContent = `${model.label} / GEO-DS LAB`;
+      $('#viewer-position').textContent = `${String(index + 1).padStart(2, '0')} / ${String(viewerModels.length).padStart(2, '0')}`;
+      $('#viewer-prev').disabled = index === 0;
+      $('#viewer-next').disabled = index === viewerModels.length - 1;
+      $('#viewer-external').href = model.url;
+      $('#viewer-slow-link').href = model.url;
+      loading.hidden = false;
+      $('.viewer-slow').hidden = true;
+      const frame = document.createElement('iframe');
+      frame.title = `${model.title} — visualizador 3D RealityMax`;
+      frame.allow = 'fullscreen; xr-spatial-tracking';
+      frame.setAttribute('allowfullscreen', '');
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      frame.addEventListener('load', () => { if (generation === viewerGeneration) { clearTimeout(loadTimeout); loading.hidden = true; } }, { once: true });
+      frame.src = model.url;
+      mount.append(frame);
+      loadTimeout = setTimeout(() => { if (generation === viewerGeneration && !loading.hidden) $('.viewer-slow').hidden = false; }, 14000);
+    }
+    document.addEventListener('click', event => {
+      const link = event.target.closest('[data-open]');
+      if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0 || typeof dialog.showModal !== 'function') return;
+      const model = modelById.get(link.dataset.open);
+      if (!model) return;
+      event.preventDefault();
+      opener = link;
+      viewerModels = visibleModels.includes(model) ? [...visibleModels] : [...models];
+      document.body.classList.add('viewer-open');
+      dialog.showModal();
+      showModel(viewerModels.indexOf(model));
+    });
+    function closeViewer() { if (dialog.open) dialog.close(); }
+    $('#viewer-close').addEventListener('click', closeViewer);
+    dialog.addEventListener('close', () => {
+      ++viewerGeneration; clearTimeout(loadTimeout); mount.replaceChildren();
+      document.body.classList.remove('viewer-open');
+      if (document.fullscreenElement === dialog && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      if (opener && opener.isConnected) opener.focus({ preventScroll: true });
+    });
+    dialog.addEventListener('click', event => {
+      if (event.target !== dialog) return;
+      const bounds = dialog.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeViewer();
+    });
+    $('#viewer-prev').addEventListener('click', () => showModel(viewerIndex - 1));
+    $('#viewer-next').addEventListener('click', () => showModel(viewerIndex + 1));
+    const fullscreen = $('#viewer-fullscreen');
+    if (!document.fullscreenEnabled || !dialog.requestFullscreen) fullscreen.hidden = true;
+    fullscreen.addEventListener('click', async () => {
+      try { if (document.fullscreenElement) await document.exitFullscreen(); else await dialog.requestFullscreen(); } catch (_) { /* Abrir numa nova janela permanece disponível. */ }
+    });
+    document.addEventListener('fullscreenchange', () => fullscreen.setAttribute('aria-label', document.fullscreenElement ? 'Sair do ecrã inteiro' : 'Abrir visualizador em ecrã inteiro'));
+    document.addEventListener('keydown', event => {
+      const editing = event.target.closest('input, textarea, select, [contenteditable="true"]');
+      if (event.key === 'Escape') closeMenu();
+      if (dialog.open) {
+        if (!editing && event.key === 'ArrowLeft') { event.preventDefault(); showModel(viewerIndex - 1); }
+        if (!editing && event.key === 'ArrowRight') { event.preventDefault(); showModel(viewerIndex + 1); }
+        return;
+      }
+      if (event.key === '/' && !editing && !event.ctrlKey && !event.metaKey && !event.altKey) { event.preventDefault(); search.focus(); search.scrollIntoView({ behavior: scrollBehavior(), block: 'center' }); }
+    });
+    let scrollQueued = false;
+    function updateProgress() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      $('.reading-progress').style.transform = `scaleX(${maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0})`;
+      scrollQueued = false;
+    }
+    window.addEventListener('scroll', () => { if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(updateProgress); } }, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    applyFilters();
+    updateProgress();
+
+    /* Terreno sintético: ilustração, sem dados ou coordenadas geográficas reais.
+       Canvas 2D, sem bibliotecas, sem WebGL, sem imagens externas. */
+    function initTerrain() {
+      const canvas = $('#terrain');
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+      const scene = $('.hero-scene');
+      $('.scene-fallback').setAttribute('hidden', '');
+      canvas.hidden = false;
+      $('.scene-controls').hidden = false;
+      $('.scene-hint').hidden = false;
+      let seed = 2749;
+      const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+      const heightAt = (x, z) => .12 + 1.35 * Math.exp(-((x + .5) ** 2 * .52 + (z - .1) ** 2 * 1.15)) + .72 * Math.exp(-((x - 1.2) ** 2 * 1.5 + (z + .5) ** 2)) + .10 * Math.sin(x * 3.4 + z * 2) + .06 * Math.cos(z * 6.2 - x * 1.8);
+      const points = [];
+      for (let z = -2.65; z <= 2.65; z += .052) for (let x = -3.15; x <= 3.15; x += .052) {
+        const radius = (x / 3.1) ** 2 + (z / 2.6) ** 2;
+        if (radius > 1 + .035 * Math.sin(x * 7 + z * 5)) continue;
+        const px = x + (random() - .5) * .04;
+        const pz = z + (random() - .5) * .04;
+        const y = heightAt(px, pz) + (random() - .5) * .035;
+        points.push({ x: px, z: pz, y, brightness: random(), side: false });
+        if (radius > .88 && random() > .3) for (let sy = -.52; sy < y; sy += .12) points.push({ x: px, z: pz, y: sy, brightness: random() * .5, side: true });
+      }
+      let w = 0, h = 0, pixelRatio = 1;
+      let baseYaw = -.62, yawOffset = 0, tiltOffset = 0;
+      let mode = 'shape';
+      let paused = motionQuery.matches;
+      let inView = true, dragging = false, pointerX = 0, pointerY = 0;
+      let animation = 0, lastFrame = 0, elapsed = 0;
+      const paletteShape = ['#31473a','#405a48','#53715a','#6a896b','#809e7d','#9db894','#bfceb0','#dfdfc8'];
+      const paletteHeight = ['#405967','#527e85','#73a39a','#96b99c','#b9caaa','#d8d7ad','#e5c691','#e8ad79'];
+      const bins = Array.from({ length: 16 }, () => []);
+      const pause = $('#pause-scene');
+      function syncPause() {
+        pause.setAttribute('aria-pressed', String(paused));
+        pause.setAttribute('aria-label', paused ? 'Retomar animação' : 'Pausar animação');
+        $('use', pause).setAttribute('href', paused ? '#i-play' : '#i-pause');
+      }
+      function draw() {
+        if (!w || !h) return;
+        ctx.clearRect(0, 0, w, h);
+        const yaw = baseYaw + yawOffset + (paused ? 0 : Math.sin(elapsed * .00010) * .07);
+        const pitch = .72 + tiltOffset;
+        const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+        const scale = Math.min(w / 7.6, h / 5.1);
+        const centreX = w * .50, centreY = h * .55;
+        /* Leitura espacial: plano base, sem valores geográficos inventados. */
+        ctx.save(); ctx.strokeStyle = '#bddbc712'; ctx.lineWidth = 1;
+        function project(x, y, z) {
+          const rx = x * cy - z * sy, rz = x * sy + z * cy;
+          return [centreX + rx * scale, centreY - (y * cp - rz * sp) * scale];
+        }
+        for (let z = -3; z <= 3; z += 1) {
+          const a = project(-3.6, -.65, z), b = project(3.6, -.65, z); ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
+        }
+        for (let x = -3; x <= 3; x += 1) {
+          const a = project(x, -.65, -3), b = project(x, -.65, 3); ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
+        }
+        ctx.restore();
+        bins.forEach(bin => bin.length = 0);
+        const scan = paused ? 10 : Math.sin(elapsed * .00022) * 3.3;
+        const stride = w < 450 ? 2 : 1;
+        for (let index = 0; index < points.length; index += stride) {
+          const p = points[index];
+          const rx = p.x * cy - p.z * sy, rz = p.x * sy + p.z * cy;
+          const px = centreX + rx * scale, py = centreY - (p.y * cp - rz * sp) * scale;
+          let level = mode === 'height' ? Math.floor((p.y + .3) / 1.95 * 7) : Math.floor(2 + p.y * 2.1 + p.brightness * 1.2);
+          if (!p.side && Math.abs(p.x - scan) < .13) level += 2;
+          level = Math.max(0, Math.min(7, level));
+          bins[level + (p.side ? 8 : 0)].push(px, py);
+        }
+        const palette = mode === 'height' ? paletteHeight : paletteShape;
+        for (let b = 8; b < 24; b++) {
+          const index = b % 16, bin = bins[index];
+          if (!bin.length) continue;
+          ctx.fillStyle = palette[index % 8]; ctx.globalAlpha = index >= 8 ? .32 : .85;
+          const size = index >= 8 ? .85 : Math.min(1.5, Math.max(.95, scale * .014));
+          ctx.beginPath(); for (let j = 0; j < bin.length; j += 2) ctx.rect(bin[j], bin[j + 1], size, size); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      function canAnimate() { return !paused && inView && !document.hidden && !dialog.open; }
+      function tick(now) {
+        animation = 0;
+        if (!canAnimate()) return;
+        if (now - lastFrame >= 32) { elapsed += Math.min(64, now - (lastFrame || now)); lastFrame = now; draw(); }
+        animation = requestAnimationFrame(tick);
+      }
+      function resume() { if (canAnimate() && !animation) { lastFrame = 0; animation = requestAnimationFrame(tick); } }
+      function stop() { cancelAnimationFrame(animation); animation = 0; }
+      function resize() {
+        const bounds = scene.getBoundingClientRect(); w = bounds.width; h = bounds.height;
+        pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(w * pixelRatio); canvas.height = Math.round(h * pixelRatio); ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0); draw();
+      }
+      pause.addEventListener('click', () => { paused = !paused; syncPause(); if (paused) { stop(); draw(); } else resume(); });
+      $$('[data-scene-mode]').forEach(button => button.addEventListener('click', () => {
+        mode = button.dataset.sceneMode; $$('[data-scene-mode]').forEach(el => el.setAttribute('aria-pressed', String(el === button))); draw();
+      }));
+      canvas.addEventListener('pointerdown', event => { if (event.button !== 0) return; dragging = true; pointerX = event.clientX; pointerY = event.clientY; canvas.setPointerCapture(event.pointerId); });
+      canvas.addEventListener('pointermove', event => {
+        if (!dragging) return;
+        yawOffset += (event.clientX - pointerX) * .006; tiltOffset = Math.max(-.18, Math.min(.22, tiltOffset + (event.clientY - pointerY) * .003)); pointerX = event.clientX; pointerY = event.clientY; draw();
+      });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => canvas.addEventListener(type, () => dragging = false));
+      canvas.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); yawOffset += event.key === 'ArrowLeft' ? -.12 : .12; draw(); }
+      });
+      if ('ResizeObserver' in window) new ResizeObserver(resize).observe(scene); else window.addEventListener('resize', resize, { passive: true });
+      if ('IntersectionObserver' in window) new IntersectionObserver(entries => { inView = entries[0].isIntersecting; if (inView) resume(); else stop(); }).observe(scene);
+      document.addEventListener('visibilitychange', () => document.hidden ? stop() : resume());
+      new MutationObserver(() => dialog.open ? stop() : resume()).observe(dialog, { attributes: true, attributeFilter: ['open'] });
+      motionQuery.addEventListener('change', event => { paused = event.matches; syncPause(); if (paused) { stop(); draw(); } else resume(); });
+      syncPause(); resize(); resume();
+    }
+    try { initTerrain(); } catch (_) { /* O SVG estático mantém a composição em browsers sem Canvas 2D. */ }
+  })();
+  </script>
+</body>
+</html>
